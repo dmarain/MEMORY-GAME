@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detective Memo Fox Number Mystery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f5f5dc 0%, #e6d7b7 50%, #d4c5a9 100%);
+            margin: 0;
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+```
+    .game-container {
+        background: linear-gradient(135deg, #f5f5dc 0%, #f0ead6 100%);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        text-align: center;
+        max-width: 600px;
+        width: 90%;
+        margin: 20px;
+    }
+
+    .parent-container {
+        background: linear-gradient(135deg, #e8f4fd 0%, #d1e7ff 100%);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        text-align: center;
+        max-width: 600px;
+        width: 90%;
+        margin: 20px;
+        border: 3px solid #4ecdc4;
+    }
+
+    h1 {
+        color: #228B22;
+        font-size: 2.5em;
+        font-weight: bold;
+        margin: 20px 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        line-height: 1.2;
+    }
+
+    .parent-title {
+        color: #2c3e50;
+        font-size: 2em;
+        font-weight: bold;
+        margin: 20px 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .fox-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .detective-fox {
+        font-size: 6em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .voice-btn {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+        color: white;
+        font-size: 1.2em;
+        padding: 15px 25px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .voice-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .memo-intro {
+        font-size: 1.8em;
+        color: #228B22;
+        margin: 25px 0;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .name-section {
+        margin: 30px 0;
+        padding: 25px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 15px;
+        border: 3px solid #4ecdc4;
+    }
+
+    .name-section .directions {
+        font-size: 1.4em;
+        color: #228B22;
+        margin-bottom: 20px;
+    }
+
+    .name-section input {
+        padding: 18px;
+        font-size: 1.4em;
+        border: 3px solid #4ecdc4;
+        border-radius: 10px;
+        width: 250px;
+        text-align: center;
+        margin: 20px;
+        background: white;
+        font-weight: bold;
+    }
+
+    .greeting-section {
+        margin: 30px 0;
+        padding: 25px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 15px;
+        border: 3px solid #32CD32;
+    }
+
+    .greeting-text {
+        font-size: 1.6em;
+        color: #228B22;
+        margin: 20px 0;
+        font-weight: bold;
+        line-height: 1.3;
+    }
+
+    .parent-section {
+        margin: 25px 0;
+        padding: 20px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 12px;
+        border: 2px solid #3498db;
+    }
+
+    .parent-section h3 {
+        color: #2c3e50;
+        margin: 10px 0 15px 0;
+        font-size: 1.4em;
+    }
+
+    .setting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 15px 0;
+        padding: 12px;
+        background: rgba(255,255,255,0.6);
+        border-radius: 8px;
+    }
+
+    .setting-label {
+        color: #34495e;
+        font-size: 1.1em;
+        font-weight: bold;
+        text-align: left;
+        flex: 1;
+    }
+
+    .setting-control {
+        flex: 0 0 auto;
+        margin-left: 15px;
+    }
+
+    select, input[type="checkbox"] {
+        padding: 10px;
+        font-size: 1.1em;
+        border: 2px solid #3498db;
+        border-radius: 6px;
+        background: white;
+        font-weight: bold;
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.4);
+        margin: 0;
+    }
+
+    button {
+        padding: 18px 30px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        margin: 15px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .start-btn {
+        background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        color: white;
+        font-size: 1.5em;
+        padding: 20px 40px;
+    }
+
+    .continue-btn {
+        background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
+        color: white;
+        font-size: 1.4em;
+        padding: 18px 35px;
+    }
+
+    .parent-btn {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        font-size: 1.2em;
+        padding: 15px 25px;
+        margin: 12px;
+    }
+
+    .directions {
+        font-size: 1.2em;
+        color: #228B22;
+        font-weight: bold;
+        margin: 15px 0;
+        padding: 8px;
+    }
+
+    .streak-info {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+        color: white;
+        padding: 12px 18px;
+        border-radius: 12px;
+        margin: 15px 0;
+        font-size: 1.1em;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .number-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin: 25px auto;
+        max-width: 350px;
+        min-height: 160px;
+    }
+
+    .number-grid.grid-5 {
+        grid-template-columns: repeat(5, 1fr);
+        max-width: 400px;
+    }
+
+    .number-grid.grid-6 {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 300px;
+    }
+
+    .number-grid.grid-7 {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 400px;
+    }
+
+    .number-grid.grid-8 {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 400px;
+    }
+
+    .number-box {
+        width: 70px;
+        height: 70px;
+        border: 3px solid #4ecdc4;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2em;
+        font-weight: bold;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .missing-number {
+        background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
+        color: white;
+        font-size: 2.8em;
+    }
+
+    .hidden-numbers {
+        opacity: 0;
+    }
+
+    .timer-display {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 20px;
+        font-size: 1.5em;
+        font-weight: bold;
+        margin: 15px 0;
+        min-height: 30px;
+    }
+
+    .input-area {
+        margin: 25px 0;
+    }
+
+    .input-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+    }
+
+    #answer-input {
+        padding: 15px;
+        font-size: 1.3em;
+        font-weight: bold;
+        border: 3px solid #4ecdc4;
+        border-radius: 10px;
+        width: 180px;
+        text-align: center;
+        outline: none;
+        background: white;
+        color: #228B22;
+    }
+
+    #answer-input:focus {
+        border-color: #32CD32;
+        box-shadow: 0 0 15px rgba(50, 205, 50, 0.5);
+        background: #f0fff0;
+    }
+
+    #answer-input:disabled {
+        background: #f0f0f0;
+        border-color: #ccc;
+        color: #999;
+        cursor: not-allowed;
+    }
+
+    #submit-btn {
+        background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        color: white;
+        padding: 15px 25px;
+        font-size: 1.2em;
+    }
+
+    .try-again-btn {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        color: white;
+        font-size: 1.1em;
+        margin: 12px;
+    }
+
+    .feedback {
+        font-size: 1.4em;
+        font-weight: bold;
+        margin: 20px 0;
+        padding: 15px;
+        border-radius: 12px;
+        min-height: 25px;
+    }
+
+    .success {
+        background: #d4edda;
+        color: #228B22;
+        border: 3px solid #c3e6cb;
+    }
+
+    .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 3px solid #f5c6cb;
+    }
+
+    .level-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 20px 0;
+    }
+
+    .level-options button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 1.1em;
+        padding: 15px 12px;
+    }
+
+    .audio-toggle {
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        color: white;
+        font-size: 1.1em;
+        margin: 15px 0;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .progress-chart {
+        background: #f8f9ff;
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+        border: 3px solid #4ecdc4;
+        font-size: 1em;
+    }
+
+    .progress-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+    }
+
+    .progress-table th, .progress-table td {
+        border: 2px solid #4ecdc4;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1em;
+    }
+
+    .progress-table th {
+        background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        color: white;
+    }
+
+    @media (max-width: 700px) {
+        .game-container, .parent-container {
+            width: 95%;
+            padding: 25px;
+        }
+        
+        h1 {
+            font-size: 2em;
+        }
+        
+        .detective-fox {
+            font-size: 4em;
+        }
+        
+        .fox-section {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .setting-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .setting-control {
+            margin-left: 0;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <!-- Initial Welcome Screen -->
+    <div class="game-container" id="welcome-container">
+        <h1>🎯 Detective Number Mystery</h1>
+        <div class="fox-section">
+            <div class="detective-fox">🦊🔍</div>
+            <button class="voice-btn" id="voice-btn">🔊 Meet Memo!</button>
+        </div>
+        <div class="memo-intro">Hi! I'm Memo the Fox!</div>
+    </div>
+
+```
+<!-- Name Entry Screen -->
+<div class="game-container hidden" id="name-container">
+    <h1>🎯 Detective Number Mystery</h1>
+    <div class="detective-fox">🦊🔍</div>
+
+    <div class="name-section">
+        <div class="directions">What's your name, detective?</div>
+        <input type="text" id="name-input" placeholder="Enter your name" maxlength="15" autocomplete="off">
+    </div>
+</div>
+
+<!-- Greeting Screen -->
+<div class="game-container hidden" id="greeting-container">
+    <h1>🎯 Detective Number Mystery</h1>
+    <div class="detective-fox">🦊🔍</div>
+
+    <div class="greeting-section">
+        <div class="greeting-text" id="greeting-text">
+            <!-- Greeting will be inserted here -->
+        </div>
+        <button class="continue-btn" id="continue-btn">Continue</button>
+    </div>
+</div>
+
+<!-- Parent Settings Screen -->
+<div class="parent-container hidden" id="parent-container">
+    <div class="parent-title">🎮 Parent Settings</div>
+    <div class="detective-fox">👨‍👩‍👧‍👦</div>
+    
+    <div class="parent-section">
+        <h3>🎯 Game Difficulty</h3>
+        <div class="setting-row">
+            <div class="setting-label">Starting Level:</div>
+            <div class="setting-control">
+                <select id="level-select">
+                    <option value="1">Level 1 (4 numbers, 1-2 missing)</option>
+                    <option value="2">Level 2 (5 numbers, 2-3 missing)</option>
+                    <option value="3">Level 3 (6 numbers, 2-3 missing)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="parent-section">
+        <h3>🔊 Audio Settings</h3>
+        <div class="setting-row">
+            <div class="setting-label">Enable voice narration:</div>
+            <div class="setting-control">
+                <input type="checkbox" id="voice-enabled" checked>
+            </div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-label">Say numbers out loud:</div>
+            <div class="setting-control">
+                <input type="checkbox" id="speak-numbers" checked>
+            </div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-label">Auto-disable numbers speech after:</div>
+            <div class="setting-control">
+                <select id="disable-after">
+                    <option value="never">Never</option>
+                    <option value="2">2 correct in a row</option>
+                    <option value="5">5 correct in a row</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <button class="parent-btn" id="start-game-btn">Start Game</button>
+    <button class="parent-btn" id="back-to-greeting-btn">Back</button>
+</div>
+    
+<!-- Game Screen -->
+<div class="game-container hidden" id="game-container">
+    <h1 id="game-title">🎯 Level 1: Numbers 1-4</h1>
+    <div class="detective-fox">🦊🔍</div>
+    
+    <div class="streak-info" id="streak-display">
+        STREAK: 0 | MISSION: Get 5 in a row!
+    </div>
+
+    <div class="directions" id="main-directions">
+        Numbers 1-4 below, some are missing:
+    </div>
+
+    <div class="timer-display hidden" id="timer-display"></div>
+
+    <div class="number-grid" id="number-grid">
+        <!-- Number boxes appear here -->
+    </div>
+
+    <div class="directions">
+        Enter missing numbers (space between):
+    </div>
+
+    <div class="input-area">
+        <div class="input-row">
+            <input type="text" id="answer-input" autocomplete="off" disabled>
+            <button id="submit-btn">Submit</button>
+        </div>
+        <button class="try-again-btn hidden" id="try-again-btn">Try Again (Show Numbers)</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="audio-toggle hidden" id="audio-toggle-section">
+        <button class="audio-toggle" id="toggle-numbers-speech">Turn Off Numbers Speech</button>
+    </div>
+
+    <div class="level-options hidden" id="level-options">
+        <button id="stay-btn">Stay Level</button>
+        <button id="next-btn">Next Level</button>
+        <button id="progress-btn">Progress</button>
+        <button id="end-btn">End Game</button>
+    </div>
+
+    <div class="progress-chart hidden" id="progress-chart">
+        <h3>Progress Chart</h3>
+        <table class="progress-table">
+            <thead>
+                <tr><th>Level</th><th>Right</th><th>Total</th><th>%</th></tr>
+            </thead>
+            <tbody id="progress-body"></tbody>
+        </table>
+        <button id="continue-game-btn">Keep Playing</button>
+        <button id="final-end-btn">End</button>
+    </div>
+</div>
+
+<script>
+    // Game state
+    let playerName = '';
+    let currentLevel = 1;
+    let consecutiveCorrect = 0;
+    let attempts = 0;
+    let currentMissing = [];
+    let gameEnded = false;
+    let numbersVisible = true;
+    let gameTimer = null;
+    let inputEnabled = false;
+    let stats = {
+        1: { right: 0, total: 0 },
+        2: { right: 0, total: 0 },
+        3: { right: 0, total: 0 },
+        4: { right: 0, total: 0 },
+        5: { right: 0, total: 0 }
+    };
+
+    // Settings
+    let settings = {
+        voiceEnabled: true,
+        speakNumbers: true,
+        disableNumbersAfter: 'never',
+        startingLevel: 1
+    };
+
+    // Level configurations
+    const levelConfig = {
+        1: { numbers: [1,2,3,4], missing: [1,2], timer: 8, description: "Numbers 1-4" },
+        2: { numbers: [1,2,3,4,5], missing: [2,3], timer: 10, description: "Numbers 1-5" },
+        3: { numbers: [1,2,3,4,5,6], missing: [2,3], timer: 15, description: "Numbers 1-6" },
+        4: { numbers: [1,2,3,4,5,6,7], missing: [3,4], timer: 20, description: "Numbers 1-7" },
+        5: { numbers: [1,2,3,4,5,6,7,8], missing: [3,4], timer: 26, description: "Numbers 1-8" }
+    };
+
+    const celebrations = ['Great job!', 'Excellent!', 'Awesome!', 'Perfect!'];
+
+    // Text-to-speech function
+    function speak(text, callback = null) {
+        if (settings.voiceEnabled && 'speechSynthesis' in window) {
+            try {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                utterance.volume = 0.8;
+                
+                const voices = speechSynthesis.getVoices();
+                const femaleVoice = voices.find(voice => 
+                    voice.name.includes('female') || 
+                    voice.name.includes('Google US English') ||
+                    voice.name.includes('Samantha') ||
+                    voice.name.includes('Karen')
+                );
+                
+                if (femaleVoice) {
+                    utterance.voice = femaleVoice;
+                }
+                
+                if (callback) {
+                    utterance.onend = callback;
+                }
+                
+                speechSynthesis.speak(utterance);
+            } catch (e) {
+                console.log('Speech not available');
+                if (callback) callback();
+            }
+        } else if (callback) {
+            callback();
+        }
+    }
+
+    // Shuffle array function
+    function shuffle(array) {
+        const result = [...array];
+        for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [result[i], result[j]] = [result[j], result[i]];
+        }
+        return result;
+    }
+
+    // Navigation functions
+    function showVoiceIntro() {
+        speak("Hello young detective! I'm Memo the Fox, and I need your help solving number mysteries! Please enter your name so we can get started on our adventure together!", showNameEntry);
+    }
+
+    function showNameEntry() {
+        document.getElementById('welcome-container').classList.add('hidden');
+        document.getElementById('name-container').classList.remove('hidden');
+        
+        setTimeout(() => {
+            const nameInput = document.getElementById('name-input');
+            nameInput.focus();
+            nameInput.setSelectionRange(0, 0);
+        }, 200);
+    }
+
+    function processName() {
+        const nameInput = document.getElementById('name-input');
+        playerName = nameInput.value.trim();
+        
+        if (!playerName) {
+            speak('Please enter your name first!');
+            nameInput.focus();
+            return;
+        }
+        
+        showGreeting();
+    }
+
+    function showGreeting() {
+        document.getElementById('name-container').classList.add('hidden');
+        document.getElementById('greeting-container').classList.remove('hidden');
+        
+        const greetingText = `Hello ${playerName}! Nice to meet you, detective! Let's solve today's mysteries together!`;
+        document.getElementById('greeting-text').textContent = greetingText;
+        
+        speak(`Hello ${playerName}! Nice to meet you, detective! Let's solve today's mysteries together!`);
+    }
+
+    function showParentSettings() {
+        document.getElementById('greeting-container').classList.add('hidden');
+        document.getElementById('parent-container').classList.remove('hidden');
+        
+        if (settings.voiceEnabled) {
+            speak('Parent settings are now displayed. Please configure the game options and click Start Game when ready.');
+        }
+    }
+
+    function backToGreeting() {
+        document.getElementById('parent-container').classList.add('hidden');
+        document.getElementById('greeting-container').classList.remove('hidden');
+    }
+
+    function startGame() {
+        // Get settings from parent controls
+        settings.startingLevel = parseInt(document.getElementById('level-select').value);
+        settings.voiceEnabled = document.getElementById('voice-enabled').checked;
+        settings.speakNumbers = document.getElementById('speak-numbers').checked;
+        settings.disableNumbersAfter = document.getElementById('disable-after').value;
+        
+        currentLevel = settings.startingLevel;
+        
+        // Update title
+        const config = levelConfig[currentLevel];
+        document.getElementById('game-title').textContent = `🎯 Level ${currentLevel}: ${config.description}`;
+        document.getElementById('main-directions').textContent = `${config.description} below, some are missing:`;
+        
+        document.getElementById('parent-container').classList.add('hidden');
+        document.getElementById('game-container').classList.remove('hidden');
+        
+        speak(`Great! Now let's start our first mystery, ${playerName}! Your mission is to find 5 missing numbers in a row. Are you ready?`);
+        
+        setTimeout(createNewRound, 2000);
+    }
+
+    // Update streak display
+    function updateStreak() {
+        const display = document.getElementById('streak-display');
+        if (consecutiveCorrect >= 5) {
+            display.textContent = `STREAK: ${consecutiveCorrect} | 🎉 MISSION COMPLETE!`;
+            display.style.background = 'linear-gradient(135deg, #32CD32 0%, #228B22 100%)';
+        } else {
+            const needed = 5 - consecutiveCorrect;
+            display.textContent = `STREAK: ${consecutiveCorrect} | MISSION: Get ${needed} more!`;
+            display.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)';
+        }
+
+        // Show audio toggle option if enabled
+        const disableAfter = parseInt(settings.disableNumbersAfter);
+        if (settings.speakNumbers && !isNaN(disableAfter) && consecutiveCorrect >= disableAfter) {
+            document.getElementById('audio-toggle-section').classList.remove('hidden');
+        }
+    }
+
+    // Enable input after speech
+    function enableInput() {
+        const input = document.getElementById('answer-input');
+        inputEnabled = true;
+        input.disabled = false;
+        input.focus();
+        input.setSelectionRange(0, 0);
+        input.style.caretColor = '#228B22';
+    }
+
+    // Disable input
+    function disableInput() {
+        const input = document.getElementById('answer-input');
+        inputEnabled = false;
+        input.disabled = true;
+    }
+
+    // Timer function
+    function startTimer() {
+        const config = levelConfig[currentLevel];
+        const timerDisplay = document.getElementById('timer-display');
+        timerDisplay.classList.remove('hidden');
+        let timeLeft = config.timer;
+        timerDisplay.textContent = `Time left: ${timeLeft}s`;
+        
+        gameTimer = setInterval(() => {
+            timeLeft--;
+            timerDisplay.textContent = `Time left: ${timeLeft}s`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(gameTimer);
+                hideNumbers();
+            }
+        }, 1000);
+    }
+
+    function hideNumbers() {
+        const grid = document.getElementById('number-grid');
+        grid.classList.add('hidden-numbers');
+        document.getElementById('timer-display').classList.add('hidden');
+        document.getElementById('try-again-btn').classList.remove('hidden');
+        numbersVisible = false;
+        
+        // Disable input initially and speak message
+        disableInput();
+        speak(`OK ${playerName}, enter the missing numbers from your memory.`, enableInput);
+    }
+
+    function showNumbersAgain() {
+        const grid = document.getElementById('number-grid');
+        grid.classList.remove('hidden-numbers');
+        document.getElementById('try-again-btn').classList.add('hidden');
+        numbersVisible = true;
+        
+        // Restart timer
+        if (gameTimer) clearInterval(gameTimer);
+        startTimer();
+    }
+
+    // Create new round
+    function createNewRound() {
+        const config = levelConfig[currentLevel];
+        const numbers = [...config.numbers];
+        const missingOptions = config.missing;
+        const missingCount = missingOptions[Math.floor(Math.random() * missingOptions.length)];
+        
+        const shuffled = shuffle(numbers);
+        const missingPositions = [];
+        
+        while (missingPositions.length < missingCount) {
+            const pos = Math.floor(Math.random() * numbers.length);
+            if (!missingPositions.includes(pos)) {
+                missingPositions.push(pos);
+            }
+        }
+        
+        currentMissing = missingPositions.map(pos => shuffled[pos]).sort((a, b) => a - b);
+        
+        // Create number grid
+        const grid = document.getElementById('number-grid');
+        grid.innerHTML = '';
+        grid.classList.remove('hidden-numbers');
+        
+        // Set grid layout based on number count
+        grid.className = 'number-grid';
+        if (numbers.length === 5) grid.classList.add('grid-5');
+        else if (numbers.length === 6) grid.classList.add('grid-6');
+        else if (numbers.length === 7) grid.classList.add('grid-7');
+        else if (numbers.length === 8) grid.classList.add('grid-8');
+        
+        shuffled.forEach((num, index) => {
+            const box = document.createElement('div');
+            box.className = 'number-box';
+            
+            if (missingPositions.includes(index)) {
+                box.className += ' missing-number';
+                box.textContent = '?';
+            } else {
+                box.textContent = num;
+            }
+            
+            grid.appendChild(box);
+        });
+        
+        // Reset UI
+        attempts = 0;
+        numbersVisible = true;
+        disableInput(); // Start with input disabled
+        document.getElementById('answer-input').value = '';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('level-options').classList.add('hidden');
+        document.getElementById('progress-chart').classList.add('hidden');
+        document.getElementById('try-again-btn').classList.add('hidden');
+        document.getElementById('timer-display').classList.add('hidden');
+        
+        if (gameTimer) clearInterval(gameTimer);
+        
+        updateStreak();
+        
+        // Start timer
+        startTimer();
+        
+        // Speak clue
+        const visible = shuffled.filter((num, i) => !missingPositions.includes(i));
+        let speech = `${playerName}, `;
+        
+        if (settings.speakNumbers) {
+            speech += `I can see the numbers ${visible.join(', ')}, but ${missingCount} numbers are missing. Can you find them?`;
+        } else {
+            speech += `${missingCount} numbers are missing from this sequence. Can you find them?`;
+        }
+        
+        speak(speech, enableInput);
+    }
+
+    // Check answer
+    function checkAnswer() {
+        if (!inputEnabled) return;
+        
+        const input = document.getElementById('answer-input');
+        const answer = input.value.trim();
+        const feedback = document.getElementById('feedback');
+        
+        if (!answer) {
+            feedback.textContent = 'Please enter your answer!';
+            feedback.className = 'feedback error';
+            speak('Please enter your answer!');
+            return;
+        }
+        
+        const userNumbers = answer.split(/\s+/).map(n => parseInt(n)).filter(n => !isNaN(n));
+        
+        if (userNumbers.length !== currentMissing.length) {
+            feedback.textContent = `Enter exactly ${currentMissing.length} numbers!`;
+            feedback.className = 'feedback error';
+            speak(`You need to enter exactly ${currentMissing.length} numbers!`);
+            input.focus();
+            return;
+        }
+        
+        const userSorted = [...userNumbers].sort((a, b) => a - b);
+        const correctSorted = [...currentMissing].sort((a, b) => a - b);
+        const isCorrect = userSorted.every((num, i) => num === correctSorted[i]);
+        
+        // Clear timer and disable input
+        if (gameTimer) clearInterval(gameTimer);
+        document.getElementById('timer-display').classList.add('hidden');
+        document.getElementById('try-again-btn').classList.add('hidden');
+        disableInput();
+        
+        stats[currentLevel].total++;
+        
+        if (isCorrect) {
+            stats[currentLevel].right++;
+            consecutiveCorrect++;
+            
+            const celebration = celebrations[Math.floor(Math.random() * celebrations.length)];
+            let message = '';
+            let speech = '';
+            
+            if (consecutiveCorrect === 5) {
+                message = `🎉 ${celebration} 5 in a row! Mission complete! 🎉`;
+                speech = `${celebration} ${playerName}! You got 5 in a row! Mission complete! You're an amazing detective!`;
+            } else if (consecutiveCorrect === 10) {
+                message = `🌟 ${celebration} 10 in a row! Incredible! 🌟`;
+                speech = `${celebration} ${playerName}! 10 in a row! You're absolutely incredible!`;
+            } else {
+                message = `${celebration} That's ${consecutiveCorrect} in a row!`;
+                speech = `${celebration} ${playerName}! That's ${consecutiveCorrect} in a row!`;
+            }
+            
+            feedback.textContent = message;
+            feedback.className = 'feedback success';
+            updateStreak();
+            speak(speech);
+            
+            if (consecutiveCorrect >= 5 && consecutiveCorrect % 5 === 0) {
+                document.getElementById('level-options').classList.remove('hidden');
+                if (consecutiveCorrect === 5) {
+                    speak(`You can now choose to stay on this level, try the next level, view your progress, or end the game!`);
+                }
+            } else {
+                setTimeout(() => {
+                    if (!gameEnded) createNewRound();
+                }, 2000);
+            }
+            
+        } else {
+            attempts++;
+            consecutiveCorrect = 0;
+            updateStreak();
+            
+            if (attempts >= 2) {
+                feedback.textContent = `The answer was ${currentMissing.join(' and ')}`;
+                feedback.className = 'feedback error';
+                speak(`The missing numbers were ${currentMissing.join(' and ')}. Let's try another one!`);
+                
+                setTimeout(() => {
+                    if (!gameEnded) createNewRound();
+                }, 3000);
+            } else {
+                feedback.textContent = 'Try again!';
+                feedback.className = 'feedback error';
+                speak(`Try again ${playerName}!`);
+                input.value = '';
+                input.focus();
+            }
+        }
+    }
+
+    // Show progress
+    function showProgress() {
+        const body = document.getElementById('progress-body');
+        body.innerHTML = '';
+        
+        for (let level = 1; level <= 5; level++) {
+            const stat = stats[level];
+            const percent = stat.total > 0 ? Math.round((stat.right / stat.total) * 100) : 0;
+            
+            const row = body.insertRow();
+            row.insertCell(0).textContent = level;
+            row.insertCell(1).textContent = stat.right;
+            row.insertCell(2).textContent = stat.total;
+            row.insertCell(3).textContent = percent + '%';
+        }
+        
+        document.getElementById('progress-chart').classList.remove('hidden');
+        document.getElementById('level-options').classList.add('hidden');
+    }
+
+    // Event listeners - This is the crucial part that was missing!
+    document.addEventListener('DOMContentLoaded', function() {
+        // Welcome screen
+        document.getElementById('voice-btn').addEventListener('click', showVoiceIntro);
+        
+        // Name entry
+        document.getElementById('name-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') processName();
+        });
+        
+        // Greeting screen
+        document.getElementById('continue-btn').addEventListener('click', showParentSettings);
+        
+        // Parent settings
+        document.getElementById('start-game-btn').addEventListener('click', startGame);
+        document.getElementById('back-to-greeting-btn').addEventListener('click', backToGreeting);
+        
+        // Game screen
+        document.getElementById('submit-btn').addEventListener('click', checkAnswer);
+        document.getElementById('try-again-btn').addEventListener('click', showNumbersAgain);
+        
+        document.getElementById('answer-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && inputEnabled) checkAnswer();
+        });
+        
+        // Audio toggle
+        document.getElementById('toggle-numbers-speech').addEventListener('click', function() {
+            settings.speakNumbers = !settings.speakNumbers;
+            this.textContent = settings.speakNumbers ? 'Turn Off Numbers Speech' : 'Turn On Numbers Speech';
+            const action = settings.speakNumbers ? 'enabled' : 'disabled';
+            speak(`Numbers speech has been ${action}.`);
+        });
+        
+        // Level options
+        document.getElementById('stay-btn').addEventListener('click', function() {
+            consecutiveCorrect = 0;
+            updateStreak();
+            speak(`Let's keep practicing on this level ${playerName}! Your new mission is 5 more in a row!`);
+            createNewRound();
+        });
+        
+        document.getElementById('next-btn').addEventListener('click', function() {
+            if (currentLevel < 5) {
+                currentLevel++;
+                const config = levelConfig[currentLevel];
+                document.getElementById('game-title').textContent = `🎯 Level ${currentLevel}: ${config.description}`;
+                document.getElementById('main-directions').textContent = `${config.description} below, some are missing:`;
+                consecutiveCorrect = 0;
+                updateStreak();
+                speak(`Welcome to Level ${currentLevel} ${playerName}! ${config.description} and more numbers might be missing!`);
+                createNewRound();
+            }
+        });
+        
+        document.getElementById('progress-btn').addEventListener('click', showProgress);
+        
+        document.getElementById('continue-game-btn').addEventListener('click', function() {
+            document.getElementById('progress-chart').classList.add('hidden');
+            speak(`Let's keep playing ${playerName}!`);
+            createNewRound();
+        });
+        
+        document.getElementById('end-btn').addEventListener('click', function() {
+            showProgress();
+            speak(`Great work today ${playerName}! You're an excellent detective!`);
+        });
+        
+        document.getElementById('final-end-btn').addEventListener('click', function() {
+            gameEnded = true;
+            if (gameTimer) clearInterval(gameTimer);
+            document.getElementById('feedback').textContent = 'Thanks for being an amazing detective!';
+            document.getElementById('feedback').className = 'feedback success';
+            speak(`Thanks for playing with me ${playerName}! You were an amazing detective! Come back anytime!`);
+        });
+
+        // Initialize voices
+        if ('speechSynthesis' in window) {
+            speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+        }
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+        if (gameTimer) clearInterval(gameTimer);
+        if ('speechSynthesis' in window) {
+            speechSynthesis.cancel();
+        }
+    });
+</script>
+```
+
+</body>
+</html>
