@@ -1,188 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detective Memo Fox Number Mystery</title>
+    <title>🎯 Detective Number Mystery</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f5dc 0%, #e6d7b7 50%, #d4c5a9 100%);
-            text-align: center;
-            padding: 20px;
-            font-size: 18px;
+            font-family: 'Segoe UI', Verdana, sans-serif;
+            background: #f1f7f8;
             margin: 0;
-            min-height: 100vh;
+            padding: 0;
         }
         .container {
-            background: linear-gradient(135deg, #f5f5dc 0%, #f0ead6 100%);
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 600px;
-            margin: 20px auto;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            max-width: 480px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 24px #bbb;
+            padding: 30px 18px 18px 18px;
+            text-align: center;
         }
         h1 {
-            color: #228B22;
-            font-size: 3.5em;
-            margin: 30px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin: 0 0 10px 0;
+            font-size: 2.1em;
+            color: #006c70;
         }
-        .fox {
-            font-size: 10em;
-            margin: 30px 0;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
-        }
-        .fox-small {
-            font-size: 3em;
-            margin: 0;
-        }
-        .intro {
-            font-size: 2.5em;
-            color: #228B22;
-            margin: 35px 0;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
+        .fox { font-size: 6em; margin-bottom: 10px; }
+        .fox-small { font-size: 2em; }
         button {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-            color: white;
+            background: #228B22;
+            color: #fff;
             border: none;
-            padding: 25px 35px;
-            font-size: 1.8em;
-            border-radius: 50px;
+            border-radius: 7px;
+            padding: 15px 24px;
+            margin: 7px 7px 7px 7px;
+            font-size: 1.2em;
+            font-weight: bold;
             cursor: pointer;
-            margin: 20px;
-            font-weight: bold;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            transition: background 0.2s;
         }
-        .continue-btn {
-            background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
-            font-size: 1.4em;
-            padding: 18px 35px;
+        button:hover {
+            background: #006c70;
         }
-        input {
-            padding: 18px;
-            font-size: 1.4em;
-            border: 3px solid #4ecdc4;
-            border-radius: 10px;
-            width: 250px;
+        input[type="text"] {
+            font-size: 1.2em;
+            padding: 7px;
+            border-radius: 7px;
+            border: 2px solid #228B22;
             text-align: center;
-            margin: 20px;
-            background: white;
-            font-weight: bold;
+            width: 80%;
         }
-        .answer-input {
-            width: 180px;
-            font-size: 1.3em;
+        .hidden { display: none; }
+        .streak-info { font-size: 1.1em; margin-bottom: 10px; }
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 28px 0;
+        }
+        .grid-item {
+            background: #f4fff4;
+            border: 2px solid #228B22;
+            border-radius: 8px;
+            font-size: 2.05em;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+            user-select: none;
+        }
+        .grid-item.missing {
+            background: #fffbe4;
+            border: 2px dashed #d4bc00;
+            cursor: pointer;
+        }
+        .grid-item.correct {
+            background: #c3f6c1;
+            border: 2px solid #14b83a;
+        }
+        .grid-item.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+        .progress-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0 10px 0;
+        }
+        .progress-table th, .progress-table td {
+            border: 1px solid #bbb;
+            padding: 7px 2px;
+            text-align: center;
+        }
+        .progress-table th {
+            background: #e9f7ef;
             color: #228B22;
+            font-size: 1.06em;
         }
-        .section {
-            margin: 30px 0;
-            padding: 25px;
-            background: rgba(255,255,255,0.4);
-            border-radius: 15px;
-            border: 3px solid #4ecdc4;
+        .progress-table tr.total-row {
+            font-weight: bold;
+            background: #f2f2f2;
+        }
+        .positive-comment {
+            color: #228B22;
+            font-weight: bold;
+            margin-bottom: 14px;
+            font-size: 1.14em;
         }
         .directions {
-            font-size: 1.4em;
-            color: #228B22;
-            margin: 20px 0;
-            font-weight: bold;
+            color: #444;
+            margin-bottom: 10px;
+            font-size: 1.05em;
         }
         .game-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 7px;
         }
         .longest-streak {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: #333;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.9em;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-        .streak-info {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-            color: white;
-            padding: 12px 18px;
-            border-radius: 12px;
-            margin: 15px 0;
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        .timer-display {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: white;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-size: 1.5em;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-        .number-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin: 25px auto;
-            max-width: 350px;
-            min-height: 160px;
-        }
-        .grid-5 { grid-template-columns: repeat(5, 1fr); max-width: 400px; }
-        .grid-6 { grid-template-columns: repeat(3, 1fr); max-width: 300px; }
-        .grid-7 { grid-template-columns: repeat(4, 1fr); max-width: 400px; }
-        .grid-8 { grid-template-columns: repeat(4, 1fr); max-width: 400px; }
-        .number-box {
-            width: 70px;
-            height: 70px;
-            border: 3px solid #4ecdc4;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .missing-number {
-            background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
-            font-size: 2.8em;
-        }
-        .hidden-numbers {
-            opacity: 0;
-        }
-        .feedback {
-            font-size: 1.4em;
-            font-weight: bold;
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 12px;
-            min-height: 25px;
-        }
-        .success {
-            background: #d4edda;
-            color: #228B22;
-            border: 3px solid #c3e6cb;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 3px solid #f5c6cb;
-        }
-        .hidden { display: none; }
-        .level-select {
-            margin-bottom: 20px;
-            text-align: left;
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        .level-select label {
-            margin: 0 8px 0 0;
+            font-size: 0.95em;
+            color: #009b2e;
+            margin-top: 3px;
         }
         @media (max-width: 600px) {
             h1 { font-size: 2.5em; }
@@ -203,6 +143,7 @@
         <button type="button" onclick="startIntro()">🔊 Meet Memo!</button>
     </div>
 </div>
+
 <!-- Name Entry -->
 <div id="name-screen" class="hidden">
     <div class="container">
@@ -216,6 +157,7 @@
         </div>
     </div>
 </div>
+
 <!-- Game Screen -->
 <div id="game-screen" class="hidden">
     <div class="container">
@@ -226,18 +168,6 @@
                 <div class="longest-streak">LONGEST: <span id="longest-streak">0</span></div>
             </div>
         </div>
-
-        <div class="level-select">
-            <label for="levelChoice">Select Level:</label>
-            <select id="levelChoice" onchange="changeLevel()">
-                <option value="4">1-4</option>
-                <option value="5">1-5</option>
-                <option value="6">1-6</option>
-                <option value="7">1-7</option>
-                <option value="8">1-8</option>
-            </select>
-        </div>
-
         <div class="streak-info" id="streak-display">
             STREAK: 0 | MISSION: Get 5 in a row!
         </div>
@@ -246,287 +176,232 @@
         </div>
         <div class="timer-display hidden" id="timer-display"></div>
         <div class="number-grid" id="number-grid"></div>
-        <div class="directions hidden" id="input-prompt">
-            Enter missing numbers (space between):
+        <div id="five-row-options" class="hidden">
+            <button onclick="repeatLevel()">Same Level</button>
+            <button onclick="nextLevel()">Next Level</button>
+            <button onclick="showProgress()">See Your Progress</button>
+            <button onclick="endGame()">End</button>
         </div>
-        <div id="input-section" class="hidden">
-            <input type="text" class="answer-input" id="answer-input" autocomplete="off">
-            <button class="continue-btn" type="button" onclick="checkAnswer()">Submit</button>
-        </div>
-        <button class="continue-btn hidden" id="try-again-btn" type="button" onclick="showNumbersAgain()">Try Again (Show Numbers)</button>
-        <button class="continue-btn hidden" id="next-round-btn" type="button" onclick="nextRound()">Next Round</button>
-        <div class="feedback" id="feedback"></div>
     </div>
 </div>
+
+<!-- Progress Screen -->
+<div id="progress-screen" class="hidden">
+    <div class="container">
+        <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 7px;" id="progress-child-name"></div>
+        <table class="progress-table" id="progress-table">
+            <!-- Table gets generated dynamically -->
+        </table>
+        <div class="positive-comment" id="positive-comment"></div>
+        <button onclick="returnToGame()">Return to Game</button>
+        <button onclick="endGame()">Quit</button>
+    </div>
+</div>
+
+<!-- End Screen -->
+<div id="end-screen" class="hidden">
+    <div class="container">
+        <h1>Great job, <span id="end-child-name"></span>!</h1>
+        <div class="fox">🦊</div>
+        <div class="positive-comment" id="end-positive-comment"></div>
+        <button onclick="location.reload()">Play Again</button>
+    </div>
+</div>
+
 <script>
-// Game state
-var playerName = '';
-var consecutiveCorrect = 0;
-var longestStreak = 0;
-var currentMissing = [];
-var numbersVisible = true;
-var gameTimer = null;
-var inputEnabled = false;
-var currentLevel = 4; // 1-4 at start
+    // --- Game State ---
+    let childName = "";
+    let currentLevel = 4;
+    let levels = [4, 5, 6, 7, 8];
+    let categories = ["1-4", "1-5", "1-6", "1-7", "1-8"];
+    let progress = { "1-4": {correct:0, total:0}, "1-5": {correct:0, total:0}, "1-6": {correct:0, total:0}, "1-7": {correct:0, total:0}, "1-8": {correct:0, total:0} };
+    let streak = 0;
+    let longestStreak = 0;
+    let fiveRowAchieved = false;
 
-function speak(text, callback) {
-    if (window.speechSynthesis) {
-        try {
-            speechSynthesis.cancel();
-            var utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.9;
-            utterance.pitch = 1.1;
-            utterance.volume = 0.8;
-            if (callback) utterance.onend = callback;
-            speechSynthesis.speak(utterance);
-        } catch (e) {
-            if (callback) callback();
+    // --- UI Navigation ---
+    function show(id) {
+        document.getElementById("welcome").classList.add("hidden");
+        document.getElementById("name-screen").classList.add("hidden");
+        document.getElementById("game-screen").classList.add("hidden");
+        document.getElementById("progress-screen").classList.add("hidden");
+        document.getElementById("end-screen").classList.add("hidden");
+        document.getElementById(id).classList.remove("hidden");
+    }
+
+    function startIntro() {
+        show('name-screen');
+        setTimeout(()=>{document.getElementById('nameField').focus()}, 400);
+    }
+
+    function processName() {
+        let name = document.getElementById("nameField").value.trim();
+        if(name.length == 0) {
+            alert("Please enter your name!");
+            return;
         }
-    } else if (callback) {
-        callback();
+        childName = name;
+        show('game-screen');
+        updateGameHeader();
+        setupLevel();
     }
-}
 
-function shuffle(array) {
-    var result = array.slice();
-    for (var i = result.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = result[i];
-        result[i] = result[j];
-        result[j] = temp;
+    function updateGameHeader() {
+        document.getElementById("level-header").textContent = `🎯 Level: Numbers 1-${currentLevel}`;
+        document.getElementById("longest-streak").textContent = longestStreak;
+        document.getElementById("level-direction").textContent = `Numbers 1 through ${currentLevel} below, some are missing:`;
     }
-    return result;
-}
 
-function showScreen(screenId) {
-    document.getElementById('welcome').style.display = 'none';
-    document.getElementById('name-screen').style.display = 'none';
-    document.getElementById('game-screen').style.display = 'none';
-    document.getElementById(screenId).style.display = 'block';
-}
-
-function startIntro() {
-    speak("Hello young detective! I'm Memo the Fox, and I need your help solving number mysteries! Please enter your name so we can get started!");
-    setTimeout(function() {
-        showScreen('name-screen');
-        setTimeout(function() {
-            document.getElementById('nameField').focus();
-        }, 500);
-    }, 8000);
-}
-
-function processName() {
-    var nameInput = document.getElementById('nameField');
-    playerName = nameInput.value.trim();
-    if (!playerName) {
-        speak('Please enter your name first!');
-        nameInput.focus();
-        return;
+    // --- Game Logic ---
+    function setupLevel() {
+        streak = 0;
+        fiveRowAchieved = false;
+        document.getElementById("streak-display").textContent = "STREAK: 0 | MISSION: Get 5 in a row!";
+        document.getElementById("five-row-options").classList.add("hidden");
+        createGrid();
     }
-    showScreen('game-screen');
-    speak('Hello ' + playerName + '! Let\'s start our mystery! Your mission is to find 5 missing numbers in a row!');
-    setTimeout(createNewRound, 3000);
-}
 
-function updateStreak() {
-    if (consecutiveCorrect > longestStreak) {
-        longestStreak = consecutiveCorrect;
-        document.getElementById('longest-streak').textContent = longestStreak;
-    }
-    var display = document.getElementById('streak-display');
-    if (consecutiveCorrect >= 5) {
-        display.textContent = 'STREAK: ' + consecutiveCorrect + ' | 🎉 MISSION COMPLETE!';
-        display.style.background = 'linear-gradient(135deg, #32CD32 0%, #228B22 100%)';
-    } else {
-        var needed = 5 - consecutiveCorrect;
-        display.textContent = 'STREAK: ' + consecutiveCorrect + ' | MISSION: Get ' + needed + ' more!';
-        display.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)';
-    }
-}
-
-function enableInput() {
-    document.getElementById('input-prompt').style.display = 'block';
-    document.getElementById('input-section').style.display = 'block';
-    var input = document.getElementById('answer-input');
-    inputEnabled = true;
-    input.disabled = false;
-    input.focus();
-}
-
-function disableInput() {
-    document.getElementById('input-prompt').style.display = 'none';
-    document.getElementById('input-section').style.display = 'none';
-    var input = document.getElementById('answer-input');
-    inputEnabled = false;
-    input.disabled = true;
-}
-
-function getTimerForLevel(level) {
-    switch(level) {
-        case 4: return 6;
-        case 5: return 8;
-        case 6: return 8;
-        case 7: return 10;
-        case 8: return 12;
-        default: return 6;
-    }
-}
-
-function startTimer() {
-    var timerDisplay = document.getElementById('timer-display');
-    timerDisplay.style.display = 'block';
-    var timeLeft = getTimerForLevel(currentLevel);
-    timerDisplay.textContent = 'Time left: ' + timeLeft + 's';
-    gameTimer = setInterval(function() {
-        timeLeft--;
-        timerDisplay.textContent = 'Time left: ' + timeLeft + 's';
-        if (timeLeft <= 0) {
-            clearInterval(gameTimer);
-            hideNumbers();
+    function createGrid() {
+        const gridDom = document.getElementById("number-grid");
+        gridDom.innerHTML = "";
+        let nums = [];
+        for(let i=1;i<=currentLevel;i++) nums.push(i);
+        // pick 1-2 numbers to hide
+        let missing = [];
+        let ct = currentLevel===4?1:2;
+        while(missing.length<ct) {
+            let n = nums[Math.floor(Math.random()*nums.length)];
+            if(!missing.includes(n)) missing.push(n);
         }
-    }, 1000);
-}
-
-function hideNumbers() {
-    var grid = document.getElementById('number-grid');
-    grid.className = grid.className + ' hidden-numbers';
-    document.getElementById('timer-display').style.display = 'none';
-    document.getElementById('try-again-btn').style.display = 'block';
-    numbersVisible = false;
-    speak('OK ' + playerName + ', time\'s up! Now enter the missing numbers from your memory.', enableInput);
-}
-
-function showNumbersAgain() {
-    var grid = document.getElementById('number-grid');
-    grid.className = grid.className.replace(' hidden-numbers', '');
-    document.getElementById('try-again-btn').style.display = 'none';
-    numbersVisible = true;
-    disableInput();
-    if (gameTimer) clearInterval(gameTimer);
-    speak(playerName + ', here are the numbers again. Study them carefully!', startTimer);
-}
-
-function createNewRound() {
-    var numbers = [];
-    for (var i = 1; i <= currentLevel; i++) numbers.push(i);
-    var shuffled = shuffle(numbers);
-    var missingCount = 2; // you can customize missing count per level if desired
-    var missingPositions = [];
-    while (missingPositions.length < missingCount) {
-        var pos = Math.floor(Math.random() * currentLevel);
-        if (missingPositions.indexOf(pos) === -1) missingPositions.push(pos);
-    }
-    currentMissing = [];
-    for (var i = 0; i < missingPositions.length; i++) {
-        currentMissing.push(shuffled[missingPositions[i]]);
-    }
-    currentMissing.sort(function(a, b) { return a - b; });
-    // Create grid
-    var grid = document.getElementById('number-grid');
-    grid.innerHTML = '';
-    grid.className = 'number-grid grid-' + currentLevel;
-    for (var i = 0; i < shuffled.length; i++) {
-        var box = document.createElement('div');
-        box.className = 'number-box';
-        if (missingPositions.indexOf(i) !== -1) {
-            box.className += ' missing-number';
-            box.textContent = '?';
-        } else {
-            box.textContent = shuffled[i];
+        let display = nums.map(n=>missing.includes(n)?null:n);
+        // shuffle display
+        for(let i=display.length-1;i>0;i--) {
+            let j = Math.floor(Math.random()*(i+1));
+            [display[i],display[j]] = [display[j],display[i]];
         }
-        grid.appendChild(box);
+        // Render grid
+        display.forEach((n,idx)=>{
+            let div = document.createElement("div");
+            div.className = "grid-item";
+            if(n===null) {
+                div.classList.add("missing");
+                div.textContent = "?";
+                div.onclick = ()=>promptForMissing(nums, missing, idx, div, display);
+            } else {
+                div.textContent = n;
+            }
+            gridDom.appendChild(div);
+        });
     }
-    // Reset UI
-    numbersVisible = true;
-    disableInput();
-    document.getElementById('answer-input').value = '';
-    document.getElementById('feedback').textContent = '';
-    document.getElementById('try-again-btn').style.display = 'none';
-    document.getElementById('next-round-btn').style.display = 'none';
-    document.getElementById('timer-display').style.display = 'none';
-    if (gameTimer) clearInterval(gameTimer);
-    updateStreak();
-    var visible = [];
-    for (var i = 0; i < shuffled.length; i++) {
-        if (missingPositions.indexOf(i) === -1) {
-            visible.push(shuffled[i]);
-        }
-    }
-    var speech = playerName + ', I can see the numbers ' + visible.join(', ') + ', but ' + missingCount + ' numbers are missing. Study them carefully!';
-    speak(speech, startTimer);
-    updateLevelHeader();
-}
 
-function checkAnswer() {
-    if (!inputEnabled) return;
-    var input = document.getElementById('answer-input');
-    var answer = input.value.trim();
-    var feedback = document.getElementById('feedback');
-    if (!answer) {
-        feedback.textContent = 'Please enter your answer!';
-        feedback.className = 'feedback error';
-        speak('Please enter your answer!');
-        return;
-    }
-    var userNumbers = [];
-    var parts = answer.split(/\s+/);
-    for (var i = 0; i < parts.length; i++) {
-        var num = parseInt(parts[i]);
-        if (!isNaN(num)) userNumbers.push(num);
-    }
-    userNumbers.sort(function(a, b) { return a - b; });
-    var isCorrect = true;
-    if (userNumbers.length !== currentMissing.length) {
-        isCorrect = false;
-    } else {
-        for (var i = 0; i < userNumbers.length; i++) {
-            if (userNumbers[i] !== currentMissing[i]) {
-                isCorrect = false;
-                break;
+    function promptForMissing(nums, missing, idx, div, display) {
+        if(div.classList.contains("correct") || div.classList.contains("incorrect")) return;
+        let guess = prompt(`What number is missing here? (1-${currentLevel})`);
+        if(guess && !isNaN(guess)) {
+            guess = parseInt(guess);
+            if(missing.includes(guess)) {
+                div.textContent = guess;
+                div.classList.add("correct");
+                div.classList.remove("missing");
+                streak++;
+                if(streak > longestStreak) longestStreak = streak;
+                document.getElementById("streak-display").textContent = `STREAK: ${streak} | MISSION: Get 5 in a row!`;
+                let cat = `1-${currentLevel}`;
+                progress[cat].correct += 1;
+                progress[cat].total += 1;
+                // Check for five-in-a-row
+                if(streak === 5 && !fiveRowAchieved) {
+                    fiveRowAchieved = true;
+                    document.getElementById("five-row-options").classList.remove("hidden");
+                } else {
+                    setTimeout(createGrid, 600);
+                }
+            } else {
+                div.classList.add("incorrect");
+                streak = 0;
+                document.getElementById("streak-display").textContent = `STREAK: 0 | MISSION: Get 5 in a row!`;
+                let cat = `1-${currentLevel}`;
+                progress[cat].total += 1;
+                setTimeout(createGrid, 800);
             }
         }
     }
-    if (gameTimer) clearInterval(gameTimer);
-    document.getElementById('timer-display').style.display = 'none';
-    document.getElementById('try-again-btn').style.display = 'none';
-    disableInput();
-    if (isCorrect) {
-        consecutiveCorrect++;
-        var celebrations = ['Great job!', 'Excellent!', 'Awesome!', 'Perfect!'];
-        var celebration = celebrations[Math.floor(Math.random() * celebrations.length)];
-        feedback.textContent = celebration + ' That\'s ' + consecutiveCorrect + ' in a row!';
-        feedback.className = 'feedback success';
-        speak(celebration + ' ' + playerName + '! That\'s ' + consecutiveCorrect + ' in a row!');
-        document.getElementById('next-round-btn').style.display = 'block';
-    } else {
-        consecutiveCorrect = 0;
-        feedback.textContent = 'The missing numbers were ' + currentMissing.join(' and ') + '. Let\'s try again!';
-        feedback.className = 'feedback error';
-        speak('The missing numbers were ' + currentMissing.join(' and ') + '. Let\'s try another one!');
-        document.getElementById('next-round-btn').style.display = 'block';
+
+    function repeatLevel() {
+        setupLevel();
     }
-    updateStreak();
-}
 
-function nextRound() {
-    createNewRound();
-}
+    function nextLevel() {
+        let idx = levels.indexOf(currentLevel);
+        if(idx<levels.length-1) {
+            currentLevel = levels[idx+1];
+            updateGameHeader();
+            setupLevel();
+        }
+        else {
+            showProgress();
+        }
+    }
 
-function changeLevel() {
-    var select = document.getElementById('levelChoice');
-    currentLevel = parseInt(select.value, 10);
-    consecutiveCorrect = 0;
-    updateLevelHeader();
-    createNewRound();
-}
+    function showProgress() {
+        show("progress-screen");
+        document.getElementById("progress-child-name").textContent = childName + "'s Progress";
+        renderProgressTable();
+        document.getElementById("positive-comment").textContent = positiveComment();
+    }
 
-function updateLevelHeader() {
-    var header = document.getElementById('level-header');
-    var dir = document.getElementById('level-direction');
-    var range = '1-' + currentLevel;
-    header.textContent = '🎯 Level: Numbers ' + range;
-    dir.textContent = 'Numbers ' + range + ' below, some are missing:';
-}
+    function positiveComment() {
+        let totalCorrect = 0, totalTotal = 0;
+        for(let cat of categories) {
+            totalCorrect += progress[cat].correct;
+            totalTotal += progress[cat].total;
+        }
+        if(totalCorrect===0) return "Let's get started!";
+        if(totalCorrect/totalTotal > 0.9) return "Fantastic work! Keep it up!";
+        if(totalCorrect/totalTotal > 0.75) return "Great job, you're getting really good!";
+        if(totalCorrect/totalTotal > 0.5) return "Good effort! Practice makes perfect!";
+        return "Every try helps you learn!";
+    }
+
+    function renderProgressTable() {
+        let table = document.getElementById("progress-table");
+        let html = `<tr>
+            <th>Level</th>
+            <th>Correct</th>
+            <th>Out Of</th>
+        </tr>`;
+        let totalCorrect = 0, totalTotal = 0;
+        for(let cat of categories) {
+            html += `<tr>
+                <td>${cat}</td>
+                <td>${progress[cat].correct}</td>
+                <td>${progress[cat].total}</td>
+            </tr>`;
+            totalCorrect += progress[cat].correct;
+            totalTotal += progress[cat].total;
+        }
+        html += `<tr class="total-row">
+            <td>Total</td>
+            <td>${totalCorrect}</td>
+            <td>${totalTotal}</td>
+        </tr>`;
+        table.innerHTML = html;
+    }
+
+    function returnToGame() {
+        show("game-screen");
+        updateGameHeader();
+        setupLevel();
+    }
+
+    function endGame() {
+        show("end-screen");
+        document.getElementById("end-child-name").textContent = childName;
+        document.getElementById("end-positive-comment").textContent = positiveComment();
+    }
+
+    // --- Start at Welcome ---
+    show('welcome');
 </script>
 </body>
 </html>
