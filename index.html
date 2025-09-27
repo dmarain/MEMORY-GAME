@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta charset="UTF-8">
@@ -176,6 +175,15 @@
             border: 3px solid #f5c6cb;
         }
         .hidden { display: none; }
+        .level-select {
+            margin-bottom: 20px;
+            text-align: left;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .level-select label {
+            margin: 0 8px 0 0;
+        }
         @media (max-width: 600px) {
             h1 { font-size: 2.5em; }
             .fox { font-size: 7em; }
@@ -186,9 +194,7 @@
     </style>
 </head>
 <body>
-
 <!-- Welcome Screen -->
-
 <div id="welcome">
     <div class="container">
         <h1>🎯 Detective Number Mystery</h1>
@@ -197,9 +203,7 @@
         <button type="button" onclick="startIntro()">🔊 Meet Memo!</button>
     </div>
 </div>
-
 <!-- Name Entry -->
-
 <div id="name-screen" class="hidden">
     <div class="container">
         <h1>🎯 Detective Number Mystery</h1>
@@ -212,50 +216,48 @@
         </div>
     </div>
 </div>
-
 <!-- Game Screen -->
-
 <div id="game-screen" class="hidden">
     <div class="container">
         <div class="game-header">
-            <h1 style="margin: 0; font-size: 1.8em; color: #228B22;">🎯 Level 1: Numbers 1-4</h1>
+            <h1 id="level-header" style="margin: 0; font-size: 1.8em; color: #228B22;">🎯 Level: Numbers 1-4</h1>
             <div>
                 <div class="fox-small">🦊🔍</div>
                 <div class="longest-streak">LONGEST: <span id="longest-streak">0</span></div>
             </div>
         </div>
 
-```
-    <div class="streak-info" id="streak-display">
-        STREAK: 0 | MISSION: Get 5 in a row!
+        <div class="level-select">
+            <label for="levelChoice">Select Level:</label>
+            <select id="levelChoice" onchange="changeLevel()">
+                <option value="4">1-4</option>
+                <option value="5">1-5</option>
+                <option value="6">1-6</option>
+                <option value="7">1-7</option>
+                <option value="8">1-8</option>
+            </select>
+        </div>
+
+        <div class="streak-info" id="streak-display">
+            STREAK: 0 | MISSION: Get 5 in a row!
+        </div>
+        <div class="directions" id="level-direction">
+            Numbers 1 through 4 below, some are missing:
+        </div>
+        <div class="timer-display hidden" id="timer-display"></div>
+        <div class="number-grid" id="number-grid"></div>
+        <div class="directions hidden" id="input-prompt">
+            Enter missing numbers (space between):
+        </div>
+        <div id="input-section" class="hidden">
+            <input type="text" class="answer-input" id="answer-input" autocomplete="off">
+            <button class="continue-btn" type="button" onclick="checkAnswer()">Submit</button>
+        </div>
+        <button class="continue-btn hidden" id="try-again-btn" type="button" onclick="showNumbersAgain()">Try Again (Show Numbers)</button>
+        <button class="continue-btn hidden" id="next-round-btn" type="button" onclick="nextRound()">Next Round</button>
+        <div class="feedback" id="feedback"></div>
     </div>
-
-    <div class="directions">
-        Numbers 1 through 4 below, some are missing:
-    </div>
-
-    <div class="timer-display hidden" id="timer-display"></div>
-
-    <div class="number-grid" id="number-grid"></div>
-
-    <div class="directions hidden" id="input-prompt">
-        Enter missing numbers (space between):
-    </div>
-
-    <div id="input-section" class="hidden">
-        <input type="text" class="answer-input" id="answer-input" autocomplete="off">
-        <button class="continue-btn" type="button" onclick="checkAnswer()">Submit</button>
-    </div>
-
-    <button class="continue-btn hidden" id="try-again-btn" type="button" onclick="showNumbersAgain()">Try Again (Show Numbers)</button>
-    <button class="continue-btn hidden" id="next-round-btn" type="button" onclick="nextRound()">Next Round</button>
-
-    <div class="feedback" id="feedback"></div>
 </div>
-```
-
-</div>
-
 <script>
 // Game state
 var playerName = '';
@@ -265,6 +267,7 @@ var currentMissing = [];
 var numbersVisible = true;
 var gameTimer = null;
 var inputEnabled = false;
+var currentLevel = 4; // 1-4 at start
 
 function speak(text, callback) {
     if (window.speechSynthesis) {
@@ -315,13 +318,11 @@ function startIntro() {
 function processName() {
     var nameInput = document.getElementById('nameField');
     playerName = nameInput.value.trim();
-    
     if (!playerName) {
         speak('Please enter your name first!');
         nameInput.focus();
         return;
     }
-    
     showScreen('game-screen');
     speak('Hello ' + playerName + '! Let\'s start our mystery! Your mission is to find 5 missing numbers in a row!');
     setTimeout(createNewRound, 3000);
@@ -332,7 +333,6 @@ function updateStreak() {
         longestStreak = consecutiveCorrect;
         document.getElementById('longest-streak').textContent = longestStreak;
     }
-    
     var display = document.getElementById('streak-display');
     if (consecutiveCorrect >= 5) {
         display.textContent = 'STREAK: ' + consecutiveCorrect + ' | 🎉 MISSION COMPLETE!';
@@ -361,16 +361,25 @@ function disableInput() {
     input.disabled = true;
 }
 
+function getTimerForLevel(level) {
+    switch(level) {
+        case 4: return 6;
+        case 5: return 8;
+        case 6: return 8;
+        case 7: return 10;
+        case 8: return 12;
+        default: return 6;
+    }
+}
+
 function startTimer() {
     var timerDisplay = document.getElementById('timer-display');
     timerDisplay.style.display = 'block';
-    var timeLeft = 15; // 15 seconds
+    var timeLeft = getTimerForLevel(currentLevel);
     timerDisplay.textContent = 'Time left: ' + timeLeft + 's';
-    
     gameTimer = setInterval(function() {
         timeLeft--;
         timerDisplay.textContent = 'Time left: ' + timeLeft + 's';
-        
         if (timeLeft <= 0) {
             clearInterval(gameTimer);
             hideNumbers();
@@ -384,7 +393,6 @@ function hideNumbers() {
     document.getElementById('timer-display').style.display = 'none';
     document.getElementById('try-again-btn').style.display = 'block';
     numbersVisible = false;
-    
     speak('OK ' + playerName + ', time\'s up! Now enter the missing numbers from your memory.', enableInput);
 }
 
@@ -394,49 +402,40 @@ function showNumbersAgain() {
     document.getElementById('try-again-btn').style.display = 'none';
     numbersVisible = true;
     disableInput();
-    
     if (gameTimer) clearInterval(gameTimer);
     speak(playerName + ', here are the numbers again. Study them carefully!', startTimer);
 }
 
 function createNewRound() {
-    var numbers = [1, 2, 3, 4];
+    var numbers = [];
+    for (var i = 1; i <= currentLevel; i++) numbers.push(i);
     var shuffled = shuffle(numbers);
+    var missingCount = 2; // you can customize missing count per level if desired
     var missingPositions = [];
-    
-    // Pick 2 random positions to hide
-    while (missingPositions.length < 2) {
-        var pos = Math.floor(Math.random() * 4);
-        if (missingPositions.indexOf(pos) === -1) {
-            missingPositions.push(pos);
-        }
+    while (missingPositions.length < missingCount) {
+        var pos = Math.floor(Math.random() * currentLevel);
+        if (missingPositions.indexOf(pos) === -1) missingPositions.push(pos);
     }
-    
     currentMissing = [];
     for (var i = 0; i < missingPositions.length; i++) {
         currentMissing.push(shuffled[missingPositions[i]]);
     }
     currentMissing.sort(function(a, b) { return a - b; });
-    
     // Create grid
     var grid = document.getElementById('number-grid');
     grid.innerHTML = '';
-    grid.className = 'number-grid';
-    
+    grid.className = 'number-grid grid-' + currentLevel;
     for (var i = 0; i < shuffled.length; i++) {
         var box = document.createElement('div');
         box.className = 'number-box';
-        
         if (missingPositions.indexOf(i) !== -1) {
             box.className += ' missing-number';
             box.textContent = '?';
         } else {
             box.textContent = shuffled[i];
         }
-        
         grid.appendChild(box);
     }
-    
     // Reset UI
     numbersVisible = true;
     disableInput();
@@ -445,44 +444,36 @@ function createNewRound() {
     document.getElementById('try-again-btn').style.display = 'none';
     document.getElementById('next-round-btn').style.display = 'none';
     document.getElementById('timer-display').style.display = 'none';
-    
     if (gameTimer) clearInterval(gameTimer);
     updateStreak();
-    
     var visible = [];
     for (var i = 0; i < shuffled.length; i++) {
         if (missingPositions.indexOf(i) === -1) {
             visible.push(shuffled[i]);
         }
     }
-    
-    var speech = playerName + ', I can see the numbers ' + visible.join(', ') + ', but 2 numbers are missing. Study them carefully!';
+    var speech = playerName + ', I can see the numbers ' + visible.join(', ') + ', but ' + missingCount + ' numbers are missing. Study them carefully!';
     speak(speech, startTimer);
+    updateLevelHeader();
 }
 
 function checkAnswer() {
     if (!inputEnabled) return;
-    
     var input = document.getElementById('answer-input');
     var answer = input.value.trim();
     var feedback = document.getElementById('feedback');
-    
     if (!answer) {
         feedback.textContent = 'Please enter your answer!';
         feedback.className = 'feedback error';
         speak('Please enter your answer!');
         return;
     }
-    
     var userNumbers = [];
     var parts = answer.split(/\s+/);
     for (var i = 0; i < parts.length; i++) {
         var num = parseInt(parts[i]);
-        if (!isNaN(num)) {
-            userNumbers.push(num);
-        }
+        if (!isNaN(num)) userNumbers.push(num);
     }
-    
     userNumbers.sort(function(a, b) { return a - b; });
     var isCorrect = true;
     if (userNumbers.length !== currentMissing.length) {
@@ -495,38 +486,47 @@ function checkAnswer() {
             }
         }
     }
-    
     if (gameTimer) clearInterval(gameTimer);
     document.getElementById('timer-display').style.display = 'none';
     document.getElementById('try-again-btn').style.display = 'none';
     disableInput();
-    
     if (isCorrect) {
         consecutiveCorrect++;
         var celebrations = ['Great job!', 'Excellent!', 'Awesome!', 'Perfect!'];
         var celebration = celebrations[Math.floor(Math.random() * celebrations.length)];
-        
         feedback.textContent = celebration + ' That\'s ' + consecutiveCorrect + ' in a row!';
         feedback.className = 'feedback success';
         speak(celebration + ' ' + playerName + '! That\'s ' + consecutiveCorrect + ' in a row!');
-        
         document.getElementById('next-round-btn').style.display = 'block';
     } else {
         consecutiveCorrect = 0;
         feedback.textContent = 'The missing numbers were ' + currentMissing.join(' and ') + '. Let\'s try again!';
         feedback.className = 'feedback error';
         speak('The missing numbers were ' + currentMissing.join(' and ') + '. Let\'s try another one!');
-        
         document.getElementById('next-round-btn').style.display = 'block';
     }
-    
     updateStreak();
 }
 
 function nextRound() {
     createNewRound();
 }
-</script>
 
+function changeLevel() {
+    var select = document.getElementById('levelChoice');
+    currentLevel = parseInt(select.value, 10);
+    consecutiveCorrect = 0;
+    updateLevelHeader();
+    createNewRound();
+}
+
+function updateLevelHeader() {
+    var header = document.getElementById('level-header');
+    var dir = document.getElementById('level-direction');
+    var range = '1-' + currentLevel;
+    header.textContent = '🎯 Level: Numbers ' + range;
+    dir.textContent = 'Numbers ' + range + ' below, some are missing:';
+}
+</script>
 </body>
 </html>
