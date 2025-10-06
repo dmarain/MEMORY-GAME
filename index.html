@@ -156,16 +156,13 @@
     <div class="sticky-header">
       <h1>Detective Number Mystery</h1>
     </div>
+
+    <!-- 🦊 Welcome Screen -->
     <div class="fox">🦊</div>
     <div class="intro" id="memoGreeting">Hello!</div>
-
-    <!-- 👂 Hear Memo Button -->
-    <button onclick="playMemoIntro()">Hear Memo</button>
-
-    <!-- 🧒 Name Input -->
     <input type="text" id="childNameInput" placeholder="Enter your name">
+    <button onclick="playMemoIntro()">Hear Memo</button>
     <button onclick="confirmParentSettings()">Next</button>
-
     <!-- 🎮 Game Area -->
     <div id="gameArea" style="display:none;">
       <div class="streaks">
@@ -177,7 +174,7 @@
         Memo will give you a number pattern. One number is missing. Can you find it?
       </div>
 
-      <div class="timer-display" id="timerDisplay">Time: 00:12</div>
+      <div class="timer-display" id="timerDisplay">Time: 00:00</div>
       <div class="number-grid" id="numberGrid"></div>
 
       <div class="feedback" id="feedbackArea"></div>
@@ -198,6 +195,7 @@
       <button class="parent-btn" onclick="showParentSettings()">Parent Settings</button>
       <button class="level-btn" onclick="showProgressChart()">Progress Chart</button>
     </div>
+
     <!-- ⚙️ Parent Settings -->
     <div id="parentSettings" style="display:none;" class="section parent-section">
       <h2>Parent Settings</h2>
@@ -215,9 +213,11 @@
           <option value="1">Level 1</option>
           <option value="2">Level 2</option>
           <option value="3">Level 3</option>
+          <option value="4">Level 4</option>
+          <option value="5">Level 5</option>
         </select>
       </div>
-      <button class="parent-btn" onclick="hideParentSettings(); captureNameAndStartGame();">Start Game</button>
+      <button class="parent-btn" onclick="hideParentSettings(); startGame();">Start Game</button>
     </div>
 
     <!-- 📊 Progress Chart -->
@@ -226,255 +226,208 @@
       <canvas id="progressCanvas" width="300" height="200"></canvas>
       <button class="level-btn" onclick="hideProgressChart()">Close Chart</button>
     </div>
+  </div>
+<script>
+  let childName = '';
+  let currentStreak = 0;
+  let longestStreak = 0;
+  let correctAnswer = null;
+  let timerInterval;
+  let secondsRemaining = 0;
+  let incorrectAttempts = 0;
+  let isFirstRound = true;
 
-    <!-- 🧠 Game Setup Logic -->
-    <script>
-      function captureNameAndStartGame() {
-        const nameInput = document.getElementById('childNameInput').value.trim();
-        if (nameInput === '') {
-          alert("Please enter your name before starting.");
-          return;
-        }
-        childName = nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
-        startGame();
-      }
+  function playMemoIntro() {
+    const voiceEnabled = document.getElementById('voiceCheckbox')?.checked;
+    if (!voiceEnabled) return;
+    const message = "Hello Detective! Please enter your name so I can greet you and begin the mystery.";
+    const utterance = new SpeechSynthesisUtterance(message);
+    speechSynthesis.speak(utterance);
+  }
 
-      function hideParentSettings() {
-        document.getElementById('parentSettings').style.display = 'none';
-      }
-
-      function showParentSettings() {
-        document.getElementById('parentSettings').style.display = 'block';
-      }
-
-      function showProgressChart() {
-        document.getElementById('gameContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        document.getElementById('progressChart').style.display = 'block';
-        const canvas = document.getElementById('progressCanvas');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#4caf50';
-        ctx.fillRect(50, canvas.height - currentStreak * 10, 50, currentStreak * 10);
-        ctx.fillStyle = '#ff9800';
-        ctx.fillRect(150, canvas.height - longestStreak * 10, 50, longestStreak * 10);
-        ctx.fillStyle = '#000';
-        ctx.font = '14px Arial';
-        ctx.fillText('Current', 50, canvas.height - currentStreak * 10 - 10);
-        ctx.fillText('Longest', 150, canvas.height - longestStreak * 10 - 10);
-      }
-
-      function hideProgressChart() {
-        document.getElementById('progressChart').style.display = 'none';
-      }
-    </script>
-  <script>
-    let childName = '';
-    let currentStreak = 0;
-    let longestStreak = 0;
-    let correctAnswer = null;
-    let timerInterval;
-    let secondsRemaining = 12;
-    let incorrectAttempts = 0;
-    let isFirstRound = true;
-
-    function confirmParentSettings() {
-      document.getElementById('parentSettings').style.display = 'block';
-      document.getElementById('childNameInput').style.display = 'none';
-      document.querySelector('button[onclick="confirmParentSettings()"]').style.display = 'none';
+  function confirmParentSettings() {
+    const nameInput = document.getElementById('childNameInput').value.trim();
+    if (nameInput === '') {
+      alert("Please enter your name before continuing.");
+      return;
     }
+    childName = nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    document.getElementById('memoGreeting').textContent = `Hello ${childName}! Nice to meet you, detective!`;
+    document.getElementById('childNameInput').style.display = 'none';
+    document.querySelector('button[onclick="confirmParentSettings()"]').style.display = 'none';
+    document.getElementById('parentSettings').style.display = 'block';
+  }
 
-    function playMemoIntro() {
-      const voiceEnabled = document.getElementById('voiceCheckbox')?.checked;
-      if (!voiceEnabled) return;
-      const intro = "Hello Detective! Please enter your name so I can greet you and begin the mystery.";
-      const utterance = new SpeechSynthesisUtterance(intro);
-      speechSynthesis.speak(utterance);
+  function startGame() {
+    document.getElementById('parentSettings').style.display = 'none';
+    document.getElementById('gameArea').style.display = 'block';
+    document.getElementById('gameContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    startNextRound();
+  }
+
+  function speakInstructions() {
+    const voiceEnabled = document.getElementById('voiceCheckbox')?.checked;
+    if (!voiceEnabled) return;
+    const message = "Enter the missing number or numbers separated by a space.";
+    const utterance = new SpeechSynthesisUtterance(message);
+    speechSynthesis.speak(utterance);
+  }
+
+  function startNextRound() {
+    document.getElementById('feedbackArea').textContent = '';
+    document.getElementById('nextRoundBtn').style.display = 'none';
+    document.getElementById('showNumbersBtn').style.display = 'none';
+    document.getElementById('missingNumberInput').value = '';
+    incorrectAttempts = 0;
+    generateNumberGrid(isFirstRound);
+    isFirstRound = false;
+    speakInstructions();
+    resetTimer();
+    if (document.getElementById('timerCheckbox').checked) startTimer();
+  }
+
+  function generateNumberGrid(forceStartAtOne = false) {
+    const grid = document.getElementById('numberGrid');
+    grid.innerHTML = '';
+    const level = parseInt(document.getElementById('levelSelect').value);
+    const count = level * 4;
+    const start = forceStartAtOne ? 1 : Math.floor(Math.random() * 10) + 1;
+    const numbers = [];
+    for (let i = 0; i < count; i++) {
+      numbers.push(start + i);
     }
+    const missingIndex = Math.floor(Math.random() * count);
+    correctAnswer = numbers[missingIndex];
+    numbers[missingIndex] = '?';
 
-    function startGame() {
-      const greeting = `Hello ${childName}! Nice to meet you, detective! Can you find the missing numbers from one through four?`;
-      document.getElementById('memoGreeting').textContent = greeting;
+    numbers.forEach(num => {
+      const box = document.createElement('div');
+      box.className = 'number-box';
+      box.textContent = num;
+      box.onclick = () => checkAnswer(num);
+      grid.appendChild(box);
+    });
+  }
 
-      const voiceEnabled = document.getElementById('voiceCheckbox')?.checked;
-      if (voiceEnabled) {
-        const utterance = new SpeechSynthesisUtterance(greeting);
-        speechSynthesis.speak(utterance);
-      }
+  function startTimer() {
+    const level = parseInt(document.getElementById('levelSelect').value);
+    const levelDurations = { 1: 5, 2: 6, 3: 7, 4: 8, 5: 9 };
+    secondsRemaining = levelDurations[level] || 7;
 
-      setTimeout(() => {
-        document.getElementById('gameArea').style.display = 'block';
-        document.getElementById('gameContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        startNextRound();
-      }, 4000);
-    }
-
-    function speakInstructions() {
-      const voiceEnabled = document.getElementById('voiceCheckbox')?.checked;
-      if (!voiceEnabled) return;
-      const message = "Enter the missing number or numbers separated by a space.";
-      const utterance = new SpeechSynthesisUtterance(message);
-      speechSynthesis.speak(utterance);
-    }
-
-    function startNextRound() {
-      document.getElementById('feedbackArea').textContent = '';
-      document.getElementById('nextRoundBtn').style.display = 'none';
-      document.getElementById('showNumbersBtn').style.display = 'none';
-      document.getElementById('missingNumberInput').value = '';
-      incorrectAttempts = 0;
-      generateNumberGrid(isFirstRound);
-      isFirstRound = false;
-      speakInstructions();
-      resetTimer();
-      if (document.getElementById('timerCheckbox').checked) startTimer();
-    }
-
-    function generateNumberGrid(forceStartAtOne = false) {
-      const grid = document.getElementById('numberGrid');
-      grid.innerHTML = '';
-      const level = parseInt(document.getElementById('levelSelect').value);
-      const count = level * 4;
-      const start = forceStartAtOne ? 1 : Math.floor(Math.random() * 10) + 1;
-      const numbers = [];
-      for (let i = 0; i < count; i++) {
-        numbers.push(start + i);
-      }
-      const missingIndex = Math.floor(Math.random() * count);
-      correctAnswer = numbers[missingIndex];
-      numbers[missingIndex] = '?';
-
-      numbers.forEach(num => {
-        const box = document.createElement('div');
-        box.className = 'number-box';
-        box.textContent = num;
-        box.onclick = () => checkAnswer(num);
-        grid.appendChild(box);
-      });
-    }
-
-    function checkAnswer(selected) {
-      const boxes = document.querySelectorAll('.number-box');
-      boxes.forEach(box => box.style.backgroundColor = '#fff');
-
-      const clickedBox = Array.from(boxes).find(box => box.textContent === selected.toString());
-      if (clickedBox) clickedBox.style.backgroundColor = '#c8e6c9';
-
-      if (selected === '?') return;
-
-      if (parseInt(selected) === correctAnswer) {
-        incorrectAttempts = 0;
-        currentStreak++;
-        if (currentStreak > longestStreak) longestStreak = currentStreak;
-        updateStreakDisplay();
-        updateBadge();
-
-        let praise = `Great job ${childName}, that’s ${currentStreak} in a row.`;
-        if (currentStreak === 2) praise += " You're building momentum!";
-        if (currentStreak === 4) praise += " One more to go for your next badge!";
-        document.getElementById('feedbackArea').textContent = praise;
-        document.getElementById('feedbackArea').className = 'feedback success';
-        document.getElementById('nextRoundBtn').style.display = 'inline-block';
-        stopTimer();
-      } else {
-        incorrectAttempts++;
+    document.getElementById('timerDisplay').textContent = `Time: 00:${String(secondsRemaining).padStart(2, '0')}`;
+    timerInterval = setInterval(() => {
+      secondsRemaining--;
+      document.getElementById('timerDisplay').textContent = `Time: 00:${String(secondsRemaining).padStart(2, '0')}`;
+      if (secondsRemaining <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('feedbackArea').textContent = "Time's up! Try again.";
+        document.getElementById('feedbackArea').className = 'feedback error';
         currentStreak = 0;
         updateStreakDisplay();
-
-        if (incorrectAttempts === 1) {
-          document.getElementById('feedbackArea').textContent = 'Try again!';
-          document.getElementById('feedbackArea').className = 'feedback error';
-          document.getElementById('showNumbersBtn').style.display = 'inline-block';
-        } else {
-          document.getElementById('feedbackArea').textContent = `The correct answer was ${correctAnswer}. Let's try a new challenge!`;
-          document.getElementById('feedbackArea').className = 'feedback error';
-          document.getElementById('nextRoundBtn').style.display = 'inline-block';
-        }
+        document.getElementById('nextRoundBtn').style.display = 'inline-block';
       }
-    }
+    }, 1000);
+  }
 
-    function showNumbersAgain() {
-      const boxes = document.querySelectorAll('.number-box');
-      boxes.forEach(box => box.style.visibility = 'visible');
-      setTimeout(() => {
-        boxes.forEach(box => box.style.visibility = 'hidden');
-      }, 3000);
-    }
+  function stopTimer() {
+    clearInterval(timerInterval);
+  }
 
-    function submitAnswer() {
-      const input = document.getElementById('missingNumberInput').value.trim();
-      const guesses = input.split(' ').map(n => parseInt(n)).filter(n => !isNaN(n));
-      if (guesses.includes(correctAnswer)) {
-        checkAnswer(correctAnswer);
-      } else {
-        checkAnswer(-1);
-      }
-    }
+  function resetTimer() {
+    stopTimer();
+    document.getElementById('timerDisplay').textContent = '';
+  }
 
-    function updateStreakDisplay() {
-      document.getElementById('currentStreak').textContent = `Current Streak: ${currentStreak}`;
-      document.getElementById('longestStreak').textContent = `Longest Streak: ${longestStreak}`;
-    }
+  function checkAnswer(selected) {
+    const boxes = document.querySelectorAll('.number-box');
+    boxes.forEach(box => box.style.backgroundColor = '#fff');
 
-    function updateBadge() {
-      document.getElementById('badge1').style.display = currentStreak >= 3 ? 'inline-block' : 'none';
-      document.getElementById('badge2').style.display = currentStreak >= 5 ? 'inline-block' : 'none';
-      document.getElementById('badge3').style.display = currentStreak >= 8 ? 'inline-block' : 'none';
-    }
+    const clickedBox = Array.from(boxes).find(box => box.textContent === selected.toString());
+    if (clickedBox) clickedBox.style.backgroundColor = '#c8e6c9';
 
-    function startTimer() {
-      secondsRemaining = 12;
-      document.getElementById('timerDisplay').textContent = `Time: 00:${String(secondsRemaining).padStart(2, '0')}`;
-      timerInterval = setInterval(() => {
-        secondsRemaining--;
-        document.getElementById('timerDisplay').textContent = `Time: 00:${String(secondsRemaining).padStart(2, '0')}`;
-        if (secondsRemaining <= 0) {
-          clearInterval(timerInterval);
-          document.getElementById('feedbackArea').textContent = "Time's up! Try again.";
-          document.getElementById('feedbackArea').className = 'feedback error';
-          currentStreak = 0;
-          updateStreakDisplay();
-          document.getElementById('nextRoundBtn').style.display = 'inline-block';
-        }
-      }, 1000);
-    }
+    if (selected === '?') return;
 
-    function stopTimer() {
-      clearInterval(timerInterval);
-    }
+    if (parseInt(selected) === correctAnswer) {
+      incorrectAttempts = 0;
+      currentStreak++;
+      if (currentStreak > longestStreak) longestStreak = currentStreak;
+      updateStreakDisplay();
+      updateBadge();
 
-    function resetTimer() {
+      let praise = `Great job ${childName}, that’s ${currentStreak} in a row.`;
+      if (currentStreak === 2) praise += " You're building momentum!";
+      if (currentStreak === 4) praise += " One more to go for your next badge!";
+      document.getElementById('feedbackArea').textContent = praise;
+      document.getElementById('feedbackArea').className = 'feedback success';
+      document.getElementById('nextRoundBtn').style.display = 'inline-block';
       stopTimer();
-      document.getElementById('timerDisplay').textContent = `Time: 00:12`;
-    }
+    } else {
+      incorrectAttempts++;
+      currentStreak = 0;
+      updateStreakDisplay();
 
-    function showParentSettings() {
-      document.getElementById('parentSettings').style.display = 'block';
+      if (incorrectAttempts === 1) {
+        document.getElementById('feedbackArea').textContent = 'Try again!';
+        document.getElementById('feedbackArea').className = 'feedback error';
+        document.getElementById('showNumbersBtn').style.display = 'inline-block';
+      } else {
+        document.getElementById('feedbackArea').textContent = `The correct answer was ${correctAnswer}. Let's try a new challenge!`;
+        document.getElementById('feedbackArea').className = 'feedback error';
+        document.getElementById('nextRoundBtn').style.display = 'inline-block';
+      }
     }
+  }
 
-    function hideParentSettings() {
-      document.getElementById('parentSettings').style.display = 'none';
+  function submitAnswer() {
+    const input = document.getElementById('missingNumberInput').value.trim();
+    const guesses = input.split(' ').map(n => parseInt(n)).filter(n => !isNaN(n));
+    if (guesses.includes(correctAnswer)) {
+      checkAnswer(correctAnswer);
+    } else {
+      checkAnswer(-1);
     }
+  }
 
-    function showProgressChart() {
-      document.getElementById('gameContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      document.getElementById('progressChart').style.display = 'block';
-      const canvas = document.getElementById('progressCanvas');
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#4caf50';
-      ctx.fillRect(50, canvas.height - currentStreak * 10, 50, currentStreak * 10);
-      ctx.fillStyle = '#ff9800';
-      ctx.fillRect(150, canvas.height - longestStreak * 10, 50, longestStreak * 10);
-      ctx.fillStyle = '#000';
-      ctx.font = '14px Arial';
-      ctx.fillText('Current', 50, canvas.height - currentStreak * 10 - 10);
-      ctx.fillText('Longest', 150, canvas.height - longestStreak * 10 - 10);
-    }
+  function showNumbersAgain() {
+    const boxes = document.querySelectorAll('.number-box');
+    boxes.forEach(box => box.style.visibility = 'visible');
+    setTimeout(() => {
+      boxes.forEach(box => box.style.visibility = 'hidden');
+    }, 3000);
+  }
+  function updateBadge() {
+    document.getElementById('badge1').style.display = currentStreak >= 3 ? 'inline-block' : 'none';
+    document.getElementById('badge2').style.display = currentStreak >= 5 ? 'inline-block' : 'none';
+    document.getElementById('badge3').style.display = currentStreak >= 8 ? 'inline-block' : 'none';
+  }
 
-    function hide
-function hideProgressChart() {
-  document.getElementById('progressChart').style.display = 'none';
-}
+  function showParentSettings() {
+    document.getElementById('parentSettings').style.display = 'block';
+  }
+
+  function hideParentSettings() {
+    document.getElementById('parentSettings').style.display = 'none';
+  }
+
+  function showProgressChart() {
+    document.getElementById('gameContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('progressChart').style.display = 'block';
+    const canvas = document.getElementById('progressCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#4caf50';
+    ctx.fillRect(50, canvas.height - currentStreak * 10, 50, currentStreak * 10);
+    ctx.fillStyle = '#ff9800';
+    ctx.fillRect(150, canvas.height - longestStreak * 10, 50, longestStreak * 10);
+    ctx.fillStyle = '#000';
+    ctx.font = '14px Arial';
+    ctx.fillText('Current', 50, canvas.height - currentStreak * 10 - 10);
+    ctx.fillText('Longest', 150, canvas.height - longestStreak * 10 - 10);
+  }
+
+  function hideProgressChart() {
+    document.getElementById('progressChart').style.display = 'none';
+  }
 </script>
 </body>
 </html>
