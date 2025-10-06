@@ -164,8 +164,6 @@
 
     <!-- 🧒 Name Input -->
     <input type="text" id="childNameInput" placeholder="Enter your name">
-
-    <!-- ▶️ Start Game Button -->
     <button onclick="startGame()">Start Game</button>
 
     <!-- 🎮 Game Area -->
@@ -179,12 +177,17 @@
         Memo will give you a number pattern. One number is missing. Can you find it?
       </div>
 
-      <div class="timer-display" id="timerDisplay">Time: 00:00</div>
+      <div class="timer-display" id="timerDisplay">Time: 00:07</div>
       <div class="number-grid" id="numberGrid"></div>
 
       <div class="feedback" id="feedbackArea"></div>
       <button class="continue-btn" id="nextRoundBtn" style="display:none;" onclick="startNextRound()">Next Round</button>
       <button id="showNumbersBtn" style="display:none;" onclick="showNumbersAgain()">Show Numbers Again</button>
+
+      <div id="answerInputArea">
+        <input type="text" id="missingNumberInput" placeholder="Enter missing number(s)">
+        <button onclick="submitAnswer()">Submit</button>
+      </div>
 
       <div class="badge-container" id="badgeContainer">
         <img src="badge1.png" alt="Badge 1" id="badge1">
@@ -195,7 +198,7 @@
       <button class="parent-btn" onclick="showParentSettings()">Parent Settings</button>
       <button class="level-btn" onclick="showProgressChart()">Progress Chart</button>
     </div>
-    <!-- ⚙️ Parent Settings -->
+m    <!-- ⚙️ Parent Settings -->
     <div id="parentSettings" style="display:none;" class="section parent-section">
       <h2>Parent Settings</h2>
       <div class="setting-row">
@@ -223,12 +226,6 @@
       <canvas id="progressCanvas" width="300" height="200"></canvas>
       <button class="level-btn" onclick="hideProgressChart()">Close Chart</button>
     </div>
-
-    <!-- ✏️ Optional Manual Input Area -->
-    <div id="answerInputArea" style="display:none;">
-      <input type="number" id="missingNumberInput" placeholder="Enter missing number">
-      <button onclick="submitAnswer()">Submit</button>
-    </div>
   </div>
 
   <!-- 🧠 Game Logic -->
@@ -238,7 +235,7 @@
     let longestStreak = 0;
     let correctAnswer = null;
     let timerInterval;
-    let secondsElapsed = 0;
+    let secondsRemaining = 7;
     let incorrectAttempts = 0;
 
     function playMemoIntro() {
@@ -255,7 +252,7 @@
       if (nameInput === '') return;
       childName = nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
 
-      const greeting = `Hello ${childName}! Nice to meet you, detective! I need your help to find missing numbers!`;
+      const greeting = `Hello ${childName}! Nice to meet you, detective! Can you find the missing numbers from one through four?`;
       const utterance = new SpeechSynthesisUtterance(greeting);
       speechSynthesis.speak(utterance);
 
@@ -264,6 +261,7 @@
         document.getElementById('gameArea').style.display = 'block';
         document.getElementById('childNameInput').style.display = 'none';
         document.querySelector('button[onclick="startGame()"]').style.display = 'none';
+        document.getElementById('gameContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
         startNextRound();
       }, 4000);
     }
@@ -271,9 +269,37 @@
     function speakInstructions() {
       const voiceEnabled = document.getElementById('voiceCheckbox')?.checked;
       if (!voiceEnabled) return;
-      const message = "One number is missing. Can you find it?";
+
+      const message = "Enter the missing number or numbers separated by a space.";
       const utterance = new SpeechSynthesisUtterance(message);
       speechSynthesis.speak(utterance);
+    }
+
+    function startTimer() {
+      secondsRemaining = 7;
+      document.getElementById('timerDisplay').textContent = `Time: 00:${String(secondsRemaining).padStart(2, '0')}`;
+
+      timerInterval = setInterval(() => {
+        secondsRemaining--;
+        document.getElementById('timerDisplay').textContent = `Time: 00:${String(secondsRemaining).padStart(2, '0')}`;
+        if (secondsRemaining <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('feedbackArea').textContent = "Time's up! Try again.";
+          document.getElementById('feedbackArea').className = 'feedback error';
+          currentStreak = 0;
+          updateStreakDisplay();
+          document.getElementById('nextRoundBtn').style.display = 'inline-block';
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function resetTimer() {
+      stopTimer();
+      document.getElementById('timerDisplay').textContent = `Time: 00:07`;
     }
 
     function showParentSettings() {
@@ -307,7 +333,7 @@
       document.getElementById('feedbackArea').textContent = '';
       document.getElementById('nextRoundBtn').style.display = 'none';
       document.getElementById('showNumbersBtn').style.display = 'none';
-      document.getElementById('answerInputArea').style.display = 'none';
+      document.getElementById('missingNumberInput').value = '';
       incorrectAttempts = 0;
       generateNumberGrid();
       speakInstructions();
@@ -387,9 +413,13 @@
     }
 
     function submitAnswer() {
-      const input = parseInt(document.getElementById('missingNumberInput').value);
-      if (isNaN(input)) return;
-      checkAnswer(input);
+      const input = document.getElementById('missingNumberInput').value.trim();
+      const guesses = input.split(' ').map(n => parseInt(n)).filter(n => !isNaN(n));
+      if (guesses.includes(correctAnswer)) {
+        checkAnswer(correctAnswer);
+      } else {
+        checkAnswer(-1);
+      }
     }
 
     function updateStreakDisplay() {
@@ -401,25 +431,6 @@
       document.getElementById('badge1').style.display = currentStreak >= 3 ? 'inline-block' : 'none';
       document.getElementById('badge2').style.display = currentStreak >= 5 ? 'inline-block' : 'none';
       document.getElementById('badge3').style.display = currentStreak >= 8 ? 'inline-block' : 'none';
-    }
-
-    function startTimer() {
-      secondsElapsed = 0;
-      timerInterval = setInterval(() => {
-        secondsElapsed++;
-        const minutes = Math.floor(secondsElapsed / 60);
-        const seconds = secondsElapsed % 60;
-        document.getElementById('timerDisplay').textContent = `Time: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      }, 1000);
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-    }
-
-    function resetTimer() {
-      stopTimer();
-      document.getElementById('timerDisplay').textContent = 'Time: 00:00';
     }
   </script>
 </body>
