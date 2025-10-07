@@ -180,6 +180,20 @@
         font-size: 1em;
         color: #1b5e20;
     }
+    .game-title, .main-directions {
+    font-size: 1.6em;
+    font-family: 'Comic Sans MS', 'Fredoka', 'Baloo', sans-serif;
+    color: #1b5e20;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.main-directions {
+    padding: 15px;
+    min-height: 60px;
+    overflow-wrap: break-word;
+}
+
     .header-right {
         display: flex;
         flex-direction: column;
@@ -865,8 +879,9 @@ function checkAnswer() {
         
         var celebrations = ['Great job!', 'Excellent!', 'Awesome!', 'Perfect!'];
         var msg = celebrations[Math.floor(Math.random() * celebrations.length)];
-        
-        feedback.textContent = msg + ' The answer was: ' + currentMissing.join(' ');
+var streakMsg = consecutiveCorrect < 5 ? `That’s ${consecutiveCorrect} in a row!` : '🎉 MISSION COMPLETE!';
+feedback.textContent = `${msg} ${streakMsg} The answer was: ${currentMissing.join(' ')}`;
+
         feedback.className = 'feedback celebration-success';
         
         speak(msg + ' ' + playerName + '!');
