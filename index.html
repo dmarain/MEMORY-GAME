@@ -888,56 +888,77 @@ function checkAnswer() {
     var userNumbers = userAnswer.split(/\s+/).map(n => parseInt(n)).filter(n => !isNaN(n));
     userNumbers.sort((a, b) => a - b);
 
-    var correct = userNumbers.length === currentMissing.length && 
+    var correct = userNumbers.length === currentMissing.length &&
                   userNumbers.every((val, idx) => val === currentMissing[idx]);
 
     var feedback = document.getElementById('feedback');
 
     if (correct) {
+        // update stats and streak
         stats[currentLevel].right++;
         consecutiveCorrect++;
-        
-        var celebrations = ['Great job!', 'Excellent!', 'Awesome!', 'Perfect!'];
-        var msg = celebrations[Math.floor(Math.random() * celebrations.length)];
-var streakMsg = consecutiveCorrect < 5 ? `That’s ${consecutiveCorrect} in a row!` : '🎉 MISSION COMPLETE!';
-feedback.textContent = `${msg} ${streakMsg} The answer was: ${currentMissing.join(' ')}`;
 
-        feedback.className = 'feedback celebration-success';
-        
-        speak(msg + ' ' + playerName + '!');
-        
-        if (consecutiveCorrect > 0 && consecutiveCorrect % 5 === 0) {
-            badges++;
-            setTimeout(showMegaCelebration, 1000);
+        if (consecutiveCorrect > stats[currentLevel].longest) {
+            stats[currentLevel].longest = consecutiveCorrect;
         }
-        
-        updateStreak();
+        if (consecutiveCorrect > longestStreak) {
+            longestStreak = consecutiveCorrect;
+        }
+
+        // Build the exact acknowledgement message (no revealing the answer)
+        var remaining = Math.max(5 - consecutiveCorrect, 0);
+        var name = (playerName && playerName.trim()) ? playerName : "Detective";
+        var remainingText = remaining === 1 ? "one more to go" : remaining + " more to go";
+        var msg = "Great job, " + name + "! That's " + consecutiveCorrect + " in a row -- " + remainingText + ". Press Next to continue.";
+
+        // show text and speak the same message
+        feedback.textContent = msg;
+        feedback.className = 'feedback success';
+        speak(msg);
+
+        // hide inputs and other action buttons; show only Next
         disableInput();
-        document.getElementById('next-round-btn').style.display = 'block';
-        
+        var showNumbersBtn = document.getElementById('show-numbers-btn');
+        var tryAgainBtn = document.getElementById('try-again-btn');
+        var nextBtn = document.getElementById('next-round-btn');
+
+        if (showNumbersBtn) showNumbersBtn.style.display = 'none';
+        if (tryAgainBtn) tryAgainBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'block';
+
+        updateStreak();
+
+        // If this completes the mission (5 in a row), proceed to celebration flow
         if (consecutiveCorrect >= 5) {
-            document.getElementById('level-options').style.display = 'grid';
+            badges = (typeof badges === 'number') ? badges + 1 : 1;
+            // small delay so the acknowledgement speaks first, then celebration
+            setTimeout(function() {
+                showMegaCelebration();
+            }, 800);
         }
     } else {
+        // incorrect answer handling preserved (two-try behavior)
         consecutiveCorrect = 0;
+        stats[currentLevel].wrong++;
         updateStreak();
-        
+
         if (attempts >= 2) {
             feedback.textContent = 'Not quite. The answer was: ' + currentMissing.join(' ');
             feedback.className = 'feedback error';
             speak('Not quite right. The answer was ' + currentMissing.join(' '));
             disableInput();
-            document.getElementById('next-round-btn').style.display = 'block';
+            var nextBtn = document.getElementById('next-round-btn');
+            if (nextBtn) nextBtn.style.display = 'block';
         } else {
             feedback.textContent = 'Not quite right. Try again!';
             feedback.className = 'feedback error';
             speak('Not quite right. Try again!');
-            document.getElementById('try-again-btn').style.display = 'block';
+            var tryAgainBtn = document.getElementById('try-again-btn');
+            if (tryAgainBtn) tryAgainBtn.style.display = 'block';
             disableInput();
         }
     }
 }
-
 // Level navigation
 function nextRound() {
     createNewRound();
