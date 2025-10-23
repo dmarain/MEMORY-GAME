@@ -785,23 +785,66 @@ function showNumbersAgain() {
     speak('Here are the numbers again. Study them carefully!', startTimer);
 }
 
-// Badge celebration function
+// Badge celebration function (REPLACE the existing function with this)
 function showMegaCelebration() {
+    // create celebration overlay
     var celebration = document.createElement('div');
     celebration.className = 'mega-celebration';
     celebration.innerHTML =
         '<div class="badge-emoji">🏆</div>' +
         '<div class="mega-celebration-text">DETECTIVE BADGE EARNED!</div>' +
-        '<div class="mega-celebration-text">' + playerName + ' got 5 in a row!</div>';
+        '<div class="mega-celebration-text">' + (playerName || 'Detective') + ' got 5 in a row!</div>';
     document.body.appendChild(celebration);
 
-    speak('Amazing work, ' + playerName + '! You earned a detective badge!');
+    // speak acknowledgement
+    speak('Amazing work, ' + (playerName || 'Detective') + '! You earned a detective badge!');
 
-    setTimeout(() => {
-        document.body.removeChild(celebration);
+    // During celebration, ensure inputs and unrelated buttons are hidden/disabled
+    try {
+        disableInput();
+        ['try-again-btn', 'show-numbers-btn', 'next-round-btn', 'progress-chart', 'timer-display'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+    } catch (e) {
+        // non-fatal; continue
+        console.warn('showMegaCelebration: could not hide some controls', e);
+    }
+
+    // Update badge UI immediately (so icons/count reflect the new badge)
+    try {
+        var badgeIconsEl = document.getElementById('badge-icons');
+        if (badgeIconsEl) {
+            var icons = '';
+            for (var i = 0; i < badges; i++) icons += '🏆';
+            badgeIconsEl.textContent = icons;
+        }
+        var badgeCountEl = document.getElementById('badge-count');
+        if (badgeCountEl) badgeCountEl.textContent = badges + ' badge' + (badges !== 1 ? 's' : '');
+    } catch (e) {
+        console.warn('showMegaCelebration: could not update badge UI', e);
+    }
+
+    // After a short delay show the level/options so player can choose next action
+    setTimeout(function() {
+        var levelOptions = document.getElementById('level-options');
+        if (levelOptions) {
+            levelOptions.style.display = 'block';
+            // Optionally focus first actionable element inside level-options for accessibility
+            var firstBtn = levelOptions.querySelector('button, a, [tabindex]');
+            if (firstBtn) firstBtn.focus();
+        }
+    }, 1200);
+
+    // Remove celebration overlay after display duration
+    setTimeout(function() {
+        if (document.body.contains(celebration)) {
+            document.body.removeChild(celebration);
+        }
+        // ensure input remains disabled until player explicitly chooses an option
+        disableInput();
     }, 4000);
 }
-
 // Main game round creation
 function createNewRound() {
     var config = levelConfig[currentLevel];
