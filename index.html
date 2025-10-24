@@ -1008,6 +1008,7 @@ function nextRound() {
 }
 
 function stayLevel() {
+    consecutiveCorrect = 0;
     document.getElementById('level-options').style.display = 'none';
     createNewRound();
 }
@@ -1020,6 +1021,7 @@ function nextLevel() {
         document.getElementById('main-directions').textContent = 'Numbers 1 through ' + config.numbers.length + ' below, some are missing:';
         speak('Moving to level ' + currentLevel + '!');
     }
+    consecutiveCorrect = 0;
     document.getElementById('level-options').style.display = 'none';
     setTimeout(createNewRound, 2000);
 }
