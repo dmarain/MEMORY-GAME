@@ -663,26 +663,28 @@ function startGame() {
     document.getElementById('main-directions').textContent = 'Numbers 1 through ' + config.numbers.length + ' below, some are missing:';
     
     showScreen('game-screen');
-    speak('Great! Let\'s start our mystery! Your mission is to find 5 missing numbers in a row!');
-    setTimeout(createNewRound, 3000);
-}
+    speak('Great! Let\'s start our mystery! Your mission is to find 5 missing numbers in a row!', () => {
+    setTimeout(createNewRound, 500);
+});
+
 
 // Game control functions
 function updateStreak() {
     if (consecutiveCorrect > longestStreak) {
         longestStreak = consecutiveCorrect;
-        document.getElementById('longest-streak').textContent = longestStreak;
     }
-    var display = document.getElementById('streak-display');
+    document.getElementById('longest-streak').textContent = longestStreak;
+
     if (consecutiveCorrect >= 5) {
-        display.textContent = 'STREAK: ' + consecutiveCorrect + ' | 🎉 MISSION COMPLETE!';
-        display.style.background = 'linear-gradient(135deg, #4caf50 0%, #388e3c 100%)';
+        document.getElementById('streak-display').textContent = `STREAK: ${consecutiveCorrect} | 🎉 MISSION COMPLETE!`;
+        document.getElementById('streak-display').style.background = 'linear-gradient(135deg, #4caf50 0%, #388e3c 100%)';
     } else {
-        var needed = 5 - consecutiveCorrect;
-        display.textContent = 'STREAK: ' + consecutiveCorrect + ' | MISSION: Get ' + needed + ' more!';
-        display.style.background = 'linear-gradient(135deg, #ff5722 0%, #d84315 100%)';
+        let needed = 5 - consecutiveCorrect;
+        document.getElementById('streak-display').textContent = `STREAK: ${consecutiveCorrect} | MISSION: Get ${needed} more!`;
+        document.getElementById('streak-display').style.background = 'linear-gradient(135deg, #ff5722 0%, #d84315 100%)';
     }
 }
+
 
 // Input handling functions
 function addToAnswer(num) {
