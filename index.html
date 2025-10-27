@@ -625,12 +625,12 @@ function showScreen(screenId) {
 
 // Screen navigation functions
 function startIntro() {
-    speak("Hello young detective! I'm Memo the Fox, and I need your help solving number mysteries! Please enter your name so we can get started!");
-    setTimeout(() => {
+    speak("Hello young detective! I'm Memo the Fox, and I need your help solving number mysteries! Please enter your name so we can get started!", () => {
         showScreen('name-screen');
         setTimeout(() => document.getElementById('nameField').focus(), 500);
-    }, 8000);
+    });
 }
+
 
 function processName() {
     var nameInput = document.getElementById('nameField');
@@ -666,6 +666,7 @@ function startGame() {
     speak('Great! Let\'s start our mystery! Your mission is to find 5 missing numbers in a row!', () => {
     setTimeout(createNewRound, 500);
 });
+}
 
 
 // Game control functions
