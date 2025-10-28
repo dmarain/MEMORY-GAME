@@ -641,7 +641,7 @@ function processName() {
         return;
     }
     showScreen('greeting-screen');
-    var greetingText = 'Hello ' + playerName + '! Nice to meet you, detective! Let\'s solve today\'s mysteries together!';
+    var greetingText = 'Hello ' + playerName + '! Nice to meet you! Let\'s solve today\'s mysteries together!';
     document.getElementById('greeting-text').textContent = greetingText;
     speak(greetingText);
 }
@@ -663,7 +663,7 @@ function startGame() {
     document.getElementById('main-directions').textContent = 'Numbers 1 through ' + config.numbers.length + ' below, some are missing:';
     
     showScreen('game-screen');
-    speak('Great! Let\'s start our mystery! Your mission is to find 5 missing numbers in a row!', () => {
+    speak('Great! Let\'s start our mystery! Your mission is to solve 5 mysteries in a row!', () => {
     setTimeout(createNewRound, 500);
 });
 }
