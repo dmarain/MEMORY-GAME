@@ -668,7 +668,7 @@ function startGame() {
     document.getElementById('main-directions').textContent = 'Numbers 1 through ' + config.numbers.length + ' below, some are missing:';
     
     showScreen('game-screen');
-    speak('Great! Let\'s start our mystery! Your mission is to solve 5 mysteries in a row!', () => {
+    speak('Great! Let\'s start! Your mission is to solve 5 mysteries in a row!', () => {
     setTimeout(createNewRound, 500);
 });
 }
@@ -894,7 +894,7 @@ numbersRevealedThisRound = false;
             missingPositions.push(pos);
         }
     }
-
+i
     currentMissing = [];
     for (var i = 0; i < missingPositions.length; i++) {
         currentMissing.push(shuffled[missingPositions[i]]);
