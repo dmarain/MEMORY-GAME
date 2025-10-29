@@ -788,7 +788,7 @@ function hideNumbers() {n
 
     if (missingCount === 1) {
         promptText = 'Enter the missing number:';
-        speech = 'Now enter th missing number from your memory.';
+        speech = 'Now enter the missing number from your memory.';
     } else {
         promptText = 'Enter the missing numbers (use spaces between numbers):';
         speech = 'Now enter the missing numbers from your memory. Remember to use spaces between the numbers.';
@@ -945,7 +945,13 @@ numbersRevealedThisRound = false;
     speech += '. Study the grid carefully!';
 
     speak(speech, startTimer);
-}
+}setTimeout(() => {
+    if (!inputEnabled && !numbersVisible) {
+        console.warn("Fallback: enabling input manually");
+        hideNumbers();
+    }
+}, 3000);
+
 
 // Answer checking
 function checkAnswer() {
