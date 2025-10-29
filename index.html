@@ -739,16 +739,22 @@ function startTimer() {
     var grid = document.getElementById('number-grid');
     grid.classList.add('flash-attention');
 
+    // Start countdown
     gameTimer = setInterval(() => {
         timeLeft--;
         timerDisplay.textContent = 'Time left: ' + timeLeft + 's';
         if (timeLeft <= 0) {
             clearInterval(gameTimer);
-            grid.classList.remove('flash-attention');
-            hideNumbers();
         }
     }, 1000);
+
+    // Force hideNumbers after timer duration
+    setTimeout(() => {
+        grid.classList.remove('flash-attention');
+        hideNumbers();
+    }, config.timer * 1000);
 }
+
 function showNumbersAgain() {
     if (numbersRevealedThisRound) {
         speak("You've already seen the numbers once this round.");
