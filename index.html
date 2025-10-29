@@ -721,6 +721,9 @@ function enableInput() {
     document.getElementById('input-prompt').style.display = 'block';
     document.getElementById('input-section').style.display = 'block';
     inputEnabled = true;
+  console.log("enableInput triggered");
+document.body.style.backgroundColor = "#ffe"; // temporary visual cue
+
 }
 
 function disableInput() {
@@ -1081,7 +1084,7 @@ function showProgress() {
 
     var totalRight = 0, totalAttempts = 0;
 
-    for (var level = 1; level <= 5; level++) {
+    for (var level = 0; level <= 5; level++) {
         var levelStats = stats[level];
         totalRight += levelStats.right;
         totalAttempts += levelStats.total;
