@@ -775,7 +775,7 @@ function showNumbersAgain() {
     });
 }
 
-function hideNumbers() {
+function hideNumbers() {n
     var grid = document.getElementById('number-grid');
     grid.classList.add('hidden-numbers');
     document.getElementById('timer-display').style.display = 'none';
@@ -809,12 +809,7 @@ function reviewNumbers() {
     }, 3000);
 }
 
-l
-    if (gameTimer) clearInterval(gameTimer);
 
-    var config = levelConfig[currentLevel];
-    speak('Here are the numbers again. Study them carefully!', startTimer);
-}
 
 // Badge celebration function (REPLACE the existing function with this)
 function showMegaCelebration() {
