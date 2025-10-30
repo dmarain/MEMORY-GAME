@@ -785,6 +785,8 @@ function showNumbersAgain() {
 }
 
 function hideNumbers() {
+  console.log("hideNumbers triggered");
+
     var grid = document.getElementById('number-grid');
     grid.classList.add('hidden-numbers');
     document.getElementById('timer-display').style.display = 'none';
