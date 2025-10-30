@@ -992,6 +992,20 @@ function checkAnswer() {
         if (consecutiveCorrect > longestStreak) {
             longestStreak = consecutiveCorrect;
         }
+    
+
+    // ✅ Badge logic: celebrate at 5, 10, 15...
+    if (consecutiveCorrect > 0 && consecutiveCorrect % 5 === 0) {
+        badges = (typeof badges === 'number') ? badges + 1 : 1;
+        setTimeout(function() {
+            showMegaCelebration();
+        }, 800);
+    }
+
+    // ✅ Continue with rest of success logic (e.g., feedback, next round)
+    // ...
+}
+
 
         // Build the exact acknowledgement message (no revealing the answer)
         var remaining = Math.max(5 - consecutiveCorrect, 0);
@@ -1042,7 +1056,7 @@ function checkAnswer() {
             feedback.className = 'feedback error';
             speak('Not quite right. Try again!');
             var tryAgainBtn = document.getElementById('try-again-btn');
-            if (tryAgainBtn) tryAgainBtn.style.display = 'block';
+            if (tryAgainBtn) tryAgainBtnip.style.display = 'block';
             disableInput();
         }
     }
