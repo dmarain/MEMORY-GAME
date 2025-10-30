@@ -784,7 +784,7 @@ function showNumbersAgain() {
     });
 }
 
-function hideNumbers() {n
+function hideNumbers() {die 
     var grid = document.getElementById('number-grid');
     grid.classList.add('hidden-numbers');
     document.getElementById('timer-display').style.display = 'none';
@@ -897,7 +897,7 @@ numbersRevealedThisRound = false;
             missingPositions.push(pos);
         }
     }
-i
+
     currentMissing = [];
     for (var i = 0; i < missingPositions.length; i++) {
         currentMissing.push(shuffled[missingPositions[i]]);
@@ -954,12 +954,13 @@ i
     speech += '. Study the grid carefully!';
 
     speak(speech, startTimer);
-}setTimeout(() => {
+  setTimeout(() => {
     if (!inputEnabled && !numbersVisible) {
         console.warn("Fallback: enabling input manually");
         hideNumbers();
     }
 }, 3000);
+}
 
 
 // Answer checking
