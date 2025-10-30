@@ -1030,14 +1030,7 @@ function checkAnswer() {
 
         updateStreak();
 
-        // If this completes the mission (5 in a row), proceed to celebration flow
-        if (consecutiveCorrect % 5) {
-            badges = (typeof badges === 'number') ? badges + 1 : 1;
-            // small delay so the acknowledgement speaks first, then celebration
-            setTimeout(function() {
-                showMegaCelebration();
-            }, 800);
-        }
+      
     } else {
         // incorrect answer handling preserved (two-try behavior)
         consecutiveCorrect = 0;
