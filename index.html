@@ -980,80 +980,54 @@ function checkAnswer() {
 
     var feedback = document.getElementById('feedback');
 
-    if (correct) {
-        // update stats and streak
-        stats[currentLevel].right++;
-        consecutiveCorrect++;
+    // Check if the answer is correct
+if (isCorrectAnswer) {
+    // Build the exact acknowledgement message (no revealing the answer)
+    var remaining = Math.max(5 - consecutiveCorrect, 0);
+    var name = (playerName && playerName.trim()) ? playerName : "Detective";
+    var remainingText = remaining === 1 ? "one more to go" : remaining + " more to go";
+    var msg = "Great job, " + name + "! That's " + consecutiveCorrect + " in a row -- " + remainingText + ". Press Next to continue.";
 
-        if (consecutiveCorrect > stats[currentLevel].longest) {
-            stats[currentLevel].longest = consecutiveCorrect;
-        }
-        if (consecutiveCorrect > longestStreak) {
-            longestStreak = consecutiveCorrect;
-        }
-    
+    // Show text and speak the same message
+    feedback.textContent = msg;
+    feedback.className = 'feedback success';
+    speak(msg);
 
-    // ✅ Badge logic: celebrate at 5, 10, 15...
-    if (consecutiveCorrect > 0 && consecutiveCorrect % 5 === 0) {
-        badges = (typeof badges === 'number') ? badges + 1 : 1;
-        setTimeout(function() {
-            showMegaCelebration();
-        }, 800);
-    }
+    // Hide inputs and other action buttons; show only Next
+    disableInput();
+    var showNumbersBtn = document.getElementById('show-numbers-btn');
+    var tryAgainBtn = document.getElementById('try-again-btn');
+    var nextBtn = document.getElementById('next-round-btn');
 
-    // ✅ Continue with rest of success logic (e.g., feedback, next round)
-    // ...
-}
+    if (showNumbersBtn) showNumbersBtn.style.display = 'none';
+    if (tryAgainBtn) tryAgainBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'block';
 
+    updateStreak();
 
-        // Build the exact acknowledgement message (no revealing the answer)
-        var remaining = Math.max(5 - consecutiveCorrect, 0);
-        var name = (playerName && playerName.trim()) ? playerName : "Detective";
-        var remainingText = remaining === 1 ? "one more to go" : remaining + " more to go";
-        var msg = "Great job, " + name + "! That's " + consecutiveCorrect + " in a row -- " + remainingText + ". Press Next to continue.";
+} else {
+    // Incorrect answer handling preserved (two-try behavior)
+    consecutiveCorrect = 0;
+    stats[currentLevel].wrong++;
+    updateStreak();
 
-        // show text and speak the same message
-        feedback.textContent = msg;
-        feedback.className = 'feedback success';
-        speak(msg);
-
-        // hide inputs and other action buttons; show only Next
+    if (attempts >= 2) {
+        feedback.textContent = 'Not quite. The answer was: ' + currentMissing.join(' ');
+        feedback.className = 'feedback error';
+        speak('Not quite right. The answer was ' + currentMissing.join(' '));
         disableInput();
-        var showNumbersBtn = document.getElementById('show-numbers-btn');
-        var tryAgainBtn = document.getElementById('try-again-btn');
         var nextBtn = document.getElementById('next-round-btn');
-
-        if (showNumbersBtn) showNumbersBtn.style.display = 'none';
-        if (tryAgainBtn) tryAgainBtn.style.display = 'none';
         if (nextBtn) nextBtn.style.display = 'block';
-
-        updateStreak();
-
-      
     } else {
-        // incorrect answer handling preserved (two-try behavior)
-        consecutiveCorrect = 0;
-        stats[currentLevel].wrong++;
-        updateStreak();
-
-        if (attempts >= 2) {
-            feedback.textContent = 'Not quite. The answer was: ' + currentMissing.join(' ');
-            feedback.className = 'feedback error';
-            speak('Not quite right. The answer was ' + currentMissing.join(' '));
-            disableInput();
-            var nextBtn = document.getElementById('next-round-btn');
-            if (nextBtn) nextBtn.style.display = 'block';
-        } else {
-            feedback.textContent = 'Not quite right. Try again!';
-            feedback.className = 'feedback error';
-            speak('Not quite right. Try again!');
-            var tryAgainBtn = document.getElementById('try-again-btn');
-            if (tryAgainBtn) tryAgainBtnip.style.display = 'block';
-            disableInput();
-        }
+        feedback.textContent = 'Not quite right. Try again!';
+        feedback.className = 'feedback error';
+        speak('Not quite right. Try again!');
+        var tryAgainBtn = document.getElementById('try-again-btn');
+        if (tryAgainBtn) tryAgainBtn.style.display = 'block';
+        disableInput();
     }
 }
-// 
+
 Level navigation
 function nextRound() {
     createNewRound();
